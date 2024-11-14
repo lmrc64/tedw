@@ -4,6 +4,8 @@ const productController = require('../controllers/productController');
 
 // Crear un producto
 router.post('/products', productController.createProduct);
+router.post('/products/name', productController.createProductNameCategory);
+
 
 // Obtener todos los productos
 router.get('/products', productController.getAllProducts);
