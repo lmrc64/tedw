@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons'
 
 function ProductImage({ images }) {
-  const [mainImg, setMainImg] = useState(images[0].node)
   const ref = useRef()
 
   function scroll(scrollOffset) {
@@ -15,8 +14,7 @@ function ProductImage({ images }) {
     <div className="w-full md:w-1/2 max-w-md border border-palette-lighter bg-white rounded shadow-lg">
       <div className="relative h-96">
         <Image
-          src={mainImg.originalSrc}
-          alt={mainImg.altText}
+          src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg"
           layout="fill"
           className="transform duration-500 ease-in-out hover:scale-105"
         />
@@ -34,22 +32,7 @@ function ProductImage({ images }) {
           style={{ scrollBehavior: "smooth" }}
           className="flex space-x-1 w-full overflow-auto border-t border-palette-lighter"
         >
-          {
-            images.map((imgItem, index) => (
-              <button
-                key={index}
-                className="relative w-40 h-32 flex-shrink-0 rounded-sm "
-                onClick={() => setMainImg(imgItem.node)}
-              >
-                <Image
-                  src={imgItem.node.originalSrc}
-                  alt={imgItem.node.altText}
-                  layout="fill"
-                  className=""
-                />
-              </button>
-            ))
-          }
+
         </div>
         <button
           aria-label="right-scroll"

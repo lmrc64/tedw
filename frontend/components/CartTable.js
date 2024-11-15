@@ -1,24 +1,39 @@
-import { useState, useEffect } from 'react'
-import { useUpdateCartQuantityContext } from '@/context/Store'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
-import Link from 'next/link'
-import Price from '@/components/Price'
-import { getCartSubTotal } from '@/utils/helpers'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import Link from 'next/link';
+import Price from '@/components/Price';
 
-function CartTable({ cart }) {
-  const updateCartQuantity = useUpdateCartQuantityContext()
-  const [cartItems, setCartItems] = useState([])
-  const [subtotal, setSubtotal] = useState(0)
+function CartTable() {
+  // Datos simulados para el carrito
+  const cartItems = [
+    {
+      variantId: 1,
+      productTitle: "Producto A",
+      variantTitle: "Variante A",
+      productHandle: "producto-a",
+      productImage: {
+        originalSrc: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg",
+        altText: "Imagen Producto A"
+      },
+      variantQuantity: 2,
+      variantPrice: 30
+    },
+    {
+      variantId: 2,
+      productTitle: "Producto B",
+      variantTitle: "Variante B",
+      productHandle: "producto-b",
+      productImage: {
+        originalSrc: "https://cdn.pixabay.com/photo/2016/03/09/09/17/wood-type-1246266_640.jpg",
+        altText: "Imagen Producto B"
+      },
+      variantQuantity: 1,
+      variantPrice: 50
+    }
+  ];
 
-  useEffect(() => {
-    setCartItems(cart)
-    setSubtotal(getCartSubTotal(cart))
-  }, [cart])
-
-  function updateItem(id, quantity) {
-    updateCartQuantity(id, quantity)
-  }
+  // Cálculo estático del subtotal
+  const subtotal = cartItems.reduce((total, item) => total + item.variantPrice * item.variantQuantity, 0);
 
   return (
     <div className="min-h-80 max-w-2xl my-4 sm:my-8 mx-auto w-full">
@@ -40,66 +55,40 @@ function CartTable({ cart }) {
                   alt={item.productImage.altText}
                   height={64}
                   width={64}
-                  className={`hidden sm:inline-flex`}
+                  className="hidden sm:inline-flex"
                 />
-                <Link passHref href={`/products/${item.productHandle}`}>
-                  <a className="pt-1 hover:text-palette-dark">
-                    {item.productTitle}, {item.variantTitle}
-                  </a>
+                <Link href={`/products/${item.productHandle}`} className="pt-1 hover:text-palette-dark">
+                  {item.productTitle}, {item.variantTitle}
                 </Link>
               </td>
               <td className="font-primary font-medium px-4 sm:px-6 py-4">
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  id="variant-quantity"
-                  name="variant-quantity"
-                  min="1"
-                  step="1"
-                  value={item.variantQuantity}
-                  onChange={(e) => updateItem(item.variantId, e.target.value)}
-                  className="text-gray-900 form-input border border-gray-300 w-16 rounded-sm focus:border-palette-light focus:ring-palette-light"
-                />
+                {item.variantQuantity}
               </td>
               <td className="font-primary text-base font-light px-4 sm:px-6 py-4 hidden sm:table-cell">
-                <Price
-                  currency="$"
-                  num={item.variantPrice}
-                  numSize="text-lg"
-                />
+                <Price currency="$" num={item.variantPrice} numSize="text-lg" />
               </td>
               <td className="font-primary font-medium px-4 sm:px-6 py-4">
                 <button
                   aria-label="delete-item"
                   className=""
-                  onClick={() => updateItem(item.variantId, 0)}
                 >
                   <FontAwesomeIcon icon={faTimes} className="w-8 h-8 text-palette-primary border border-palette-primary p-1 hover:bg-palette-lighter" />
                 </button>
               </td>
             </tr>
           ))}
-          {
-            subtotal === 0 ?
-              null
-              :
-              <tr className="text-center">
-                <td></td>
-                <td className="font-primary text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">Subtotal</td>
-                <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
-                  <Price
-                    currency="$"
-                    num={subtotal}
-                    numSize="text-xl"
-                  />
-                </td>
-                <td></td>
-              </tr>
-          }
+          <tr className="text-center">
+            <td></td>
+            <td className="font-primary text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">Subtotal</td>
+            <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
+              <Price currency="$" num={subtotal} numSize="text-xl" />
+            </td>
+            <td></td>
+          </tr>
         </tbody>
       </table>
     </div>
-  )
+  );
 }
 
-export default CartTable
+export default CartTable;
