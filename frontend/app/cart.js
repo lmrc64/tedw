@@ -2,10 +2,10 @@
 
 
 import SEO from '@/components/SEO'
-import PageTitle from '@/components/PageTitle'
+import PageTitle from '@/components/home/PageTitle'
 import CartTable from '@/components/CartTable'
 import CheckOutButton from '@/components/CheckOutButton'
-import BackToProductButton from '@/components/BackToProductButton'
+import BackToProductButton from '@/components/products/BackToProductButton'
 import { useCartContext } from '@/context/Store'
 
 function CartPage() {

@@ -1,21 +1,39 @@
-"use client"
-import ProductSection from '@/components/ProductSection';
+'use client';
+import { useEffect, useState } from 'react';
+import ProductSection from '@/components/products/ProductSection';
+import { useParams } from 'next/navigation';
 
 function ProductPage() {
-  // Datos estáticos simulados para un producto
-  const productData = {
-    title: "Producto Estático",
-    description: "Esta es una descripción estática de ejemplo para un producto.",
-    price: 50,
-    images: {
-      src: "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_640.jpg",
-      alt: "Imagen del producto"
-    },
-    variants: [
-      { id: 1, title: "Variante A", price: 50 },
-      { id: 2, title: "Variante B", price: 60 }
-    ]
-  };
+  const params = useParams();
+  const [productData, setProductData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const productId = params?.id;
+
+  useEffect(() => {
+    async function fetchProduct() {
+      try {
+        const res = await fetch(`http://localhost:3005/api/v1/products/${productId}`);
+        if (!res.ok) {
+          throw new Error('Error al obtener el producto');
+        }
+        const data = await res.json();
+        setProductData(data);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (productId) {
+      fetchProduct();
+    }
+  }, [productId]);
+
+  if (loading) return <p>Loading...</p>;
+
+  if (!productData) return <p>Producto no encontrado</p>;
 
   return (
     <div className="min-h-screen py-12 sm:pt-20">

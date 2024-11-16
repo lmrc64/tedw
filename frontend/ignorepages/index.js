@@ -1,4 +1,4 @@
-import StoreHeading from '@/components/StoreHeading'
+import StoreHeading from '@/components/home/StoreHeading'
 import ProductListings from '@/components/ProductListings'
 import { getAllProductsInCollection } from '@/lib/shopify'
 

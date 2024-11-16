@@ -1,5 +1,5 @@
 import { getProductSlugs, getProduct } from '@/lib/shopify'
-import ProductSection from '@/components/ProductSection'
+import ProductSection from '@/components/products/ProductSection'
 
 function ProductPage({ productData }) {  
 
