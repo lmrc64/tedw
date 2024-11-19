@@ -38,7 +38,9 @@ function Footer() {
         </li>
       </ul>
       <p className="text-sm text-gray-700">
-      <FontAwesomeIcon icon={faSchool} className="w-5 text-red-600 mx-1" />Tecnológico Nacional de México en Celaya<FontAwesomeIcon icon={faSchool} className="w-5 text-red-600 mx-1" />
+        <FontAwesomeIcon icon={faSchool} className="w-5 text-red-600 mx-1" />
+        Tecnológico Nacional de México en Celaya
+        <FontAwesomeIcon icon={faSchool} className="w-5 text-red-600 mx-1" />
       </p>
     </footer>
   );

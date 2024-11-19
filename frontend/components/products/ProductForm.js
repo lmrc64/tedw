@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { useCartContext, useAddToCartContext } from "@/context/Store";
+import { useAddToCartContext, useIsLoadingContext } from "@/context/Store";
 
-function ProductForm({ title, handle, mainImg }) {
+function ProductForm({ id, title, price, mainImg }) {
   const [quantity, setQuantity] = useState(1);
-
-  const isLoading = useCartContext();
-  //const addToCart = useAddToCartContext()
+  const addToCart = useAddToCartContext();
+  const isLoading = useIsLoadingContext();
 
   const atcBtnStyle = isLoading
     ? `pt-3 pb-2 bg-palette-primary text-white w-full mt-2 rounded-sm font-primary font-semibold text-xl flex 
@@ -16,20 +15,23 @@ function ProductForm({ title, handle, mainImg }) {
                       justify-center items-baseline  hover:bg-palette-dark`;
 
   async function handleAddToCart() {
-    if (quantity !== "") {
+    if (quantity > 0) {
       addToCart({
+        _id: id,
         productTitle: title,
-        productHandle: handle,
         productImage: mainImg,
+        quantity: quantity,
+        price: price,
       });
     }
   }
 
-  function updateQuantity(e) {
-    if (e === "") {
-      setQuantity("");
+  function updateQuantity(value) {
+    const parsedValue = parseInt(value, 10);
+    if (isNaN(parsedValue) || parsedValue <= 0) {
+      setQuantity(1);
     } else {
-      setQuantity(Math.floor(e));
+      setQuantity(parsedValue);
     }
   }
 
@@ -37,7 +39,9 @@ function ProductForm({ title, handle, mainImg }) {
     <div className="w-full">
       <div className="flex justify-start space-x-2 w-full">
         <div className="flex flex-col items-start space-y-1 flex-grow-0">
-          <label className="text-gray-500 text-base">Qty.</label>
+          <label htmlFor="quantity" className="text-gray-500 text-base">
+            Qty.
+          </label>
           <input
             type="number"
             inputMode="numeric"
@@ -51,10 +55,12 @@ function ProductForm({ title, handle, mainImg }) {
           />
         </div>
       </div>
+
       <button
         className={atcBtnStyle}
         aria-label="cart-button"
         onClick={handleAddToCart}
+        disabled={isLoading}
       >
         Add To Cart
         <FontAwesomeIcon icon={faShoppingCart} className="w-5 ml-2" />

@@ -1,7 +1,11 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-function CheckOutButton({ /*webUrl*/ }) {
+function CheckOutButton(
+  {
+    /*webUrl*/
+  },
+) {
   return (
     <a
       aria-label="checkout-products"
@@ -11,7 +15,7 @@ function CheckOutButton({ /*webUrl*/ }) {
       Check Out
       <FontAwesomeIcon icon={faArrowRight} className="w-4 ml-2 inline-flex" />
     </a>
-  )
+  );
 }
 
-export default CheckOutButton
+export default CheckOutButton;

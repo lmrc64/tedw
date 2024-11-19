@@ -1,115 +1,81 @@
+"use client";
 
-import { createContext, useContext, useState, useEffect } from 'react'
-import { createShopifyCheckout, updateShopifyCheckout, setLocalData, saveLocalData } from '@/utils/helpers'
+import { createContext, useContext, useState, useEffect  } from "react";
 
-const CartContext = createContext()
-const AddToCartContext = createContext()
-const UpdateCartQuantityContext = createContext()
+// Crear contextos para el carrito y sus acciones
+const CartContext = createContext();
+const AddToCartContext = createContext();
+const UpdateCartQuantityContext = createContext();
+const IsLoadingContext = createContext();
 
+// Hooks personalizados para usar los contextos
 export function useCartContext() {
-  return useContext(CartContext)
+  return useContext(CartContext);
 }
 
 export function useAddToCartContext() {
-  return useContext(AddToCartContext)
+  return useContext(AddToCartContext);
 }
 
 export function useUpdateCartQuantityContext() {
-  return useContext(UpdateCartQuantityContext)
+  return useContext(UpdateCartQuantityContext);
 }
 
+export function useIsLoadingContext() {
+  return useContext(IsLoadingContext);
+}
+
+
+// Proveedor de contexto del carrito
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([])
-  const [checkoutId, setCheckoutId] = useState('')
-  const [checkoutUrl, setCheckoutUrl] = useState('')
-  const [isLoading, setisLoading] = useState(false)
+  const [cart, setCart] = useState([]); 
+  const [isLoading, setIsLoading] = useState(false); 
 
-  useEffect(() => {
-    setLocalData(setCart, setCheckoutId, setCheckoutUrl)
-  }, [])
-
-  useEffect(() => {
-    // do this to make sure multiple tabs are always in sync
-    const onReceiveMessage = (e) => {
-      console.log(e)
-      setLocalData(setCart, setCheckoutId, setCheckoutUrl)
-    }
-
-    window.addEventListener("storage", onReceiveMessage);
-    return () => {
-      window.removeEventListener("storage", onReceiveMessage);
-    }
-  }, [])
-
-  async function addToCart(newItem) {
-    setisLoading(true)
-    // empty cart
-    if (cart.length === 0) {
-      setCart([
-        ...cart,
-        newItem
-      ])
-
-      const response = await createShopifyCheckout(newItem)
-      setCheckoutId(response.id)
-      setCheckoutUrl(response.webUrl)
-      saveLocalData(newItem, response.id, response.webUrl)
-
+  // Función para añadir un producto al carrito
+  function addToCart(newItem) {
+    setIsLoading(true);
+    const existingItem = cart.find((item) => item._id === newItem._id);
+  
+    if (existingItem) {
+      const updatedCart = cart.map((item) =>
+        item._id === newItem._id
+          ? { ...item, quantity: item.quantity + newItem.quantity }
+          : item
+      );
+      setCart(updatedCart);
     } else {
-      let newCart = [...cart]
-      let itemAdded = false
-      // loop through all cart items to check if variant
-      // already exists and update quantity
-      newCart.map(item => {
-        if (item.variantId === newItem.variantId) {
-          item.variantQuantity += newItem.variantQuantity
-          itemAdded = true
-        }
-      })
-
-      let newCartWithItem = [...newCart]
-      if (itemAdded) {
-      } else {
-        // if its a new item than add it to the end
-        newCartWithItem = [...newCart, newItem]
-      }
-
-      setCart(newCartWithItem)
-      await updateShopifyCheckout(newCartWithItem, checkoutId)
-      saveLocalData(newCartWithItem, checkoutId, checkoutUrl)
+      setCart([...cart, { ...newItem, quantity: newItem.quantity || 1 }]);
     }
-    setisLoading(false)
+  
+    setIsLoading(false);
   }
-
-  async function updateCartItemQuantity(id, quantity) {
-    setisLoading(true)
-    let newQuantity = Math.floor(quantity)
-    if (quantity === '') {
-      newQuantity = ''
-    }
-    let newCart = [...cart]
-    newCart.forEach(item => {
-      if (item.variantId === id) {
-        item.variantQuantity = newQuantity
-      }
-    })
-
-    // take out zeroes items
-    newCart = newCart.filter(i => i.variantQuantity !== 0)
-    setCart(newCart)
-
-    await updateShopifyCheckout(newCart, checkoutId)
-    saveLocalData(newCart, checkoutId, checkoutUrl)
-    setisLoading(false)
+  
+  // Función para actualizar la cantidad de un producto en el carrito
+  function updateCartItemQuantity(productId, quantity) {
+    setIsLoading(true); 
+    const updatedCart = cart
+      .map((item) =>
+        item._id === productId
+          ? { ...item, quantity: Math.max(0, quantity) }
+          : item
+      )
+      .filter((item) => item.quantity > 0); 
+  
+    setCart(updatedCart);
+    setIsLoading(false);
   }
+  
 
+  // Proveer contextos anidados para los hijos
   return (
-    <CartContext.Provider value={[cart, checkoutUrl, isLoading]}>
+    <CartContext.Provider value={cart}>
       <AddToCartContext.Provider value={addToCart}>
         <UpdateCartQuantityContext.Provider value={updateCartItemQuantity}>
-          {children}
+          <IsLoadingContext.Provider value={isLoading}>
+            {children}
+          </IsLoadingContext.Provider>
         </UpdateCartQuantityContext.Provider>
       </AddToCartContext.Provider>
     </CartContext.Provider>
-  )
+  );
 }

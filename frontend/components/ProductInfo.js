@@ -1,4 +1,4 @@
-import Price from '@/components/Price'
+import Price from "@/components/Price";
 
 function ProductInfo({ title, description, price }) {
   return (
@@ -6,18 +6,12 @@ function ProductInfo({ title, description, price }) {
       <h1 className="leading-relaxed font-extrabold text-3xl text-palette-primary py-2 sm:py-4">
         {title}
       </h1>
-      <p className="font-medium text-lg">
-        {description}
-      </p>
+      <p className="font-medium text-lg">{description}</p>
       <div className="text-xl text-palette-primary font-medium py-4 px-1">
-        <Price
-          currency="$"
-          num={price}
-          numSize="text-2xl"
-        />
+        <Price currency="$" num={price} numSize="text-2xl" />
       </div>
     </div>
-  )
+  );
 }
 
-export default ProductInfo
+export default ProductInfo;

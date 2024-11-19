@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import Price from '@/components/Price';
+import Image from "next/image";
+import Link from "next/link";
+import Price from "@/components/Price";
 
 function ProductCard({ product }) {
   return (
@@ -10,7 +10,7 @@ function ProductCard({ product }) {
     >
       <div className="h-72 border-b-2 border-palette-lighter relative">
         <Image
-          src={product.image[0] || '/default-image.jpg'}
+          src={product.image[0] || "/default-image.jpg"}
           alt={product.name}
           layout="fill"
           className="transform duration-500 ease-in-out hover:scale-110 object-cover"

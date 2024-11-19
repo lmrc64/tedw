@@ -1,7 +1,7 @@
-'use client';
-import { useEffect, useState } from 'react';
-import ProductSection from '@/components/products/ProductSection';
-import { useParams } from 'next/navigation';
+"use client";
+import { useEffect, useState } from "react";
+import ProductSection from "@/components/products/ProductSection";
+import { useParams } from "next/navigation";
 
 function ProductPage() {
   const params = useParams();
@@ -13,14 +13,16 @@ function ProductPage() {
   useEffect(() => {
     async function fetchProduct() {
       try {
-        const res = await fetch(`http://localhost:3005/api/v1/products/${productId}`);
+        const res = await fetch(
+          `http://localhost:3005/api/v1/products/${productId}`,
+        );
         if (!res.ok) {
-          throw new Error('Error al obtener el producto');
+          throw new Error("Error al obtener el producto");
         }
         const data = await res.json();
         setProductData(data);
       } catch (error) {
-        console.error('Error fetching product:', error);
+        console.error("Error fetching product:", error);
       } finally {
         setLoading(false);
       }
