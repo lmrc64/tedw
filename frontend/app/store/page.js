@@ -7,16 +7,16 @@ import StoreHeading from "@/components/home/StoreHeading";
 import ProductListings from "@/components/home/ProductListings";
 
 function IndexPage() {
-  const { selectedCategory } = useContext(CategoryContext);
+  const { selectedCategory, searchQuery } = useContext(CategoryContext);
 
   useEffect(() => {
-  }, [selectedCategory]);
+  }, [selectedCategory, searchQuery]);
 
   return (
     <div className="mx-auto max-w-6xl">
       <SEO title={process.env.siteTitle} />
       <StoreHeading />
-      <ProductListings category={selectedCategory} />
+      <ProductListings category={selectedCategory} searchQuery={searchQuery}/>
     </div>
   );
 }

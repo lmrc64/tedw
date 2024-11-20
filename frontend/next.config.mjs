@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["fakestoreapi.com", "cdn.pixabay.com", "example.com", "optimamayoreo.com.mx"],
+    domains: ["fakestoreapi.com", "cdn.pixabay.com", "example.com", "optimamayoreo.com.mx", "http2.mlstatic.com"],
   },
   env: {
     siteTitle: "Tienda Equipo C",

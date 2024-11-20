@@ -5,6 +5,7 @@ import ProductCard from "@/components/home/ProductCard";
 
 export default function ProductListings({ category, searchQuery }) {
   console.log("searchQuery en ProductListings:", searchQuery);
+  console.log("category en ProductListings:", category);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

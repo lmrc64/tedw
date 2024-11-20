@@ -20,6 +20,7 @@ export default function PageLayout({ children }) {
 
   };
   console.log("searchQuery en Layout:", searchQuery);
+  console.log("selectedCategory en Layout:", selectedCategory);
 
   return (
     <CategoryContext.Provider
