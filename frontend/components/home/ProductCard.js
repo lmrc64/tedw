@@ -5,7 +5,7 @@ import Price from "@/components/Price";
 function ProductCard({ product }) {
   return (
     <Link
-      href={`/products/${product._id}`}
+      href={`/store/products/${product._id}`}
       className="h-120 w-72 rounded shadow-lg mx-auto border border-palette-lighter"
     >
       <div className="h-72 border-b-2 border-palette-lighter relative">

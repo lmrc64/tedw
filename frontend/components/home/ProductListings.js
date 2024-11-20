@@ -1,15 +1,27 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import ProductCard from "@/components/home/ProductCard";
 
-export default function ProductListings() {
+export default function ProductListings({ category, searchQuery }) {
+  console.log("searchQuery en ProductListings:", searchQuery);
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+
 
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const res = await fetch("http://localhost:3005/api/v1/products");
+        let url = "http://localhost:3008/api/v1/products";
+        if (category) {
+          url += `Category?category=${category}`;
+        }
+        if (searchQuery && searchQuery.length >= 5) {
+          url += `/search?name=${searchQuery}`;
+        }
+        const res = await fetch(url);
         if (!res.ok) throw new Error("Error al obtener los productos");
 
         const data = await res.json();
@@ -22,7 +34,7 @@ export default function ProductListings() {
       }
     }
     fetchProducts();
-  }, []);
+  }, [category, searchQuery]);
 
   if (loading) return <p>Loading...</p>;
   if (!Array.isArray(products) || products.length === 0)

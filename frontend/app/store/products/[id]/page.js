@@ -14,7 +14,7 @@ function ProductPage() {
     async function fetchProduct() {
       try {
         const res = await fetch(
-          `http://localhost:3005/api/v1/products/${productId}`,
+          `http://localhost:3008/api/v1/products/${productId}`,
         );
         if (!res.ok) {
           throw new Error("Error al obtener el producto");

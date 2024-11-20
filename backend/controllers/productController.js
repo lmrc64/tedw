@@ -65,6 +65,58 @@ const getProductById = async (req, res) => {
   }
 };
 
+// Obtener un producto por ID de la categoria
+const getProductByCategory = async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    if (!category) {
+      return res.status(400).json({ message: 'Category ID is required' });
+    }
+
+    const products = await Product.find({ category }).populate('category');
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: 'No products found for the specified category' });
+    }
+
+    res.status(200).json({ products });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching products', error: err.message });
+  }
+};
+
+const getProductByName = async (req, res) => {
+  const { name, page = 1, limit = 10 } = req.query; 
+
+  // Validación del término de búsqueda
+  if (!name || name.length < 5) {
+    return res.status(400).json({ error: "El término de búsqueda debe tener al menos 5 caracteres" });
+  }
+
+  try {
+    const products = await Product.find({
+      name: { $regex: name, $options: "i" }
+    })
+      .skip((page - 1) * limit) 
+      .limit(Number(limit)) 
+      .exec(); 
+
+    const totalProducts = await Product.countDocuments({
+      name: { $regex: name, $options: "i" }
+    });
+
+    res.json({
+      products,
+      totalPages: Math.ceil(totalProducts / limit),
+      currentPage: Number(page),
+      totalProducts,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Error al buscar productos", details: error.message });
+  }
+}
+
 // Actualizar un producto por ID
 const updateProduct = async (req, res) => {
   try {
@@ -100,4 +152,6 @@ module.exports = {
   updateProduct,
   deleteProduct,
   createProductNameCategory,
+  getProductByCategory,
+  getProductByName,
 };
