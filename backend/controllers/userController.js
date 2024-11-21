@@ -1,21 +1,33 @@
-const {User} = require('../models/User'); 
+const User = require('../models/User'); 
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Crear un nuevo usuario
 const createUser = async (req, res) => {
   try {
     const { firstname, lastname, email, password, gender, phone, country, state, city, zip } = req.body;
+    const existingUser = await User.findOne({ email: email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    const passwordHash = bcrypt.hashSync(password, 10);
+    var admin = false
+      if (req.body.admin !== undefined || req.body.admin==true) 
+        admin = true
+
     const newUser = new User({
       firstname,
       lastname,
       email,
-      passwordHash: bcrypt.hashSync(password, 10),
+      passwordHash,
       gender,
       phone,
       country,
       state,
       city,
       zip,
+      admin: admin || false,
     });
     await newUser.save();
     res.status(201).json({ message: 'User created successfully', user: newUser });
@@ -39,6 +51,7 @@ const getUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-passwordHash');;
+    
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -63,7 +76,7 @@ const login = async (req, res) => {
       if (!passwordMatch) {
         return res.status(400).send('Password is incorrect!');
       }
-      /*
+      
       const secret = process.env.SECRET;
       const token = jwt.sign(
         {
@@ -73,10 +86,10 @@ const login = async (req, res) => {
         secret,
         { expiresIn: '1d' } 
       );
-      */
+      
   
-      res.status(200).send({ user: user.email});
-      //res.status(200).send({ user: user.email, token: token });
+      //res.status(200).send({ user: user.email});
+      res.status(200).send({ user: user.email, token: token });
 
     } catch (err) {
       res.status(500).send('Internal server error');

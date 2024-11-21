@@ -11,8 +11,7 @@ const userSchema = new mongoose.Schema({
   state: { type: String },
   city:{ type: String },
   zip: { type: String },
-  admin: { type: String, required: true, default: false},
-  created_date: { type: Date, default: Date.now },
+  admin: { type: Boolean, required: true, default: false},
 },{timestamps: true});
 
 module.exports = mongoose.model('User', userSchema);

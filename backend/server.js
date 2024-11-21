@@ -15,7 +15,7 @@ const couponRoutes = require("./routes/couponRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
-//const authJwt = require('./libs/jwt')
+const authJwt = require('./libs/jwt')
 
 main().catch((err) => console.log(err));
 
@@ -25,15 +25,13 @@ async function main() {
 
     console.log("Connected Succesfuly..");
 
+    app.use(authJwt())
     app.use(`${api_prefix}`, categoryRoutes);
     app.use(`${api_prefix}`, couponRoutes);
     app.use(`${api_prefix}`, orderRoutes);
     app.use(`${api_prefix}`, productRoutes);
     app.use(`${api_prefix}`, userRoutes);
-
-    //app.use(authJwt())
-    //app.use(`${api_prefix}/users`, userRouter);
-
+    
     app.listen(port, () => {
       console.log(`Listening on port ${port}!`);
     });
