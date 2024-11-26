@@ -13,7 +13,7 @@ function ProductImage({ images, description }) {
 
   return (
     <div className="w-full md:w-1/2 max-w-md border border-palette-lighter bg-white rounded shadow-lg">
-      <div className="relative h-96">
+      <div className="relative" style={{height: 26 + 'rem'}}>
         {currentImage ? (
           <Image
             src={currentImage}

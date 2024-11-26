@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import Categories from "@/components/navbar/SelectCategory";
 import Search from "@/components/navbar/InputSearch";
+import { User } from '../../app/dashboard/user';
 
 
 function Nav({ onCategoryChange , onSearch}) {
@@ -63,6 +64,8 @@ function Nav({ onCategoryChange , onSearch}) {
               </div>
             </Link>
           </div>
+          <User />
+
         </div>
       </div>
       

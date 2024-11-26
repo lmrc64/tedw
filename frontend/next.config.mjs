@@ -4,6 +4,7 @@ const nextConfig = {
     domains: ["fakestoreapi.com", "cdn.pixabay.com", "example.com", "optimamayoreo.com.mx", "http2.mlstatic.com"],
   },
   env: {
+    apiroute:"http://localhost:3008/api/v1/",
     siteTitle: "Tienda Equipo",
     siteDescription: "Your company description.",
     siteKeywords: "your company keywords",

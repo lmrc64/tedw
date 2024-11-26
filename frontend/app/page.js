@@ -1,4 +1,4 @@
-"use client"; // Para que este código se ejecute en el cliente
+"use client"; 
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -10,12 +10,10 @@ export default function PageLayout({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Supón que tienes una lógica condicional, por ejemplo, si el usuario está autenticado:
-    const userAuthenticated = false; // Reemplaza con tu lógica de autenticación
+    const userAuthenticated = false; 
 
     if (!userAuthenticated) {
-      // Redirige si el usuario no está autenticado
-      router.push("/store"); // Redirige a la página de login
+      router.push("/store");
     }
   }, [router]);
 

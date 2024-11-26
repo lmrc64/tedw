@@ -74,7 +74,7 @@ const login = async (req, res) => {
 
       const passwordMatch = await bcrypt.compare(password, user.passwordHash);     
       if (!passwordMatch) {
-        return res.status(400).send('Password is incorrect!');
+        return res.status(400).send('Credentials are incorrect!');
       }
       
       const secret = process.env.SECRET;
@@ -86,10 +86,10 @@ const login = async (req, res) => {
         secret,
         { expiresIn: '1d' } 
       );
-      
+      const name = user.firstname + " " + user.lastname
   
       //res.status(200).send({ user: user.email});
-      res.status(200).send({ user: user.email, token: token });
+      res.status(200).send({ user: user.email, token: token, name:name , gender: user.gender});
 
     } catch (err) {
       res.status(500).send('Internal server error');
