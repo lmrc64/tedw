@@ -3,6 +3,12 @@
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Nav from "./Nav";
 import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
+
+import React from "react";
+
+import { ToastContainer, toast, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface LoginForm {
   email: string;
@@ -16,6 +22,7 @@ export default function LoginPage() {
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,19 +44,30 @@ export default function LoginPage() {
 
       if (!response.ok) {
         const message = await response.text();
-        localStorage.clear();
+        sessionStorage.clear();
         throw new Error(message || "Something went wrong");
       }
 
       const data = await response.json();
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("email", data.user);
-      localStorage.setItem("name", data.name);
-      localStorage.setItem("gender", data.gender);
-
-      alert("Login successful!");
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("email", data.user);
+      sessionStorage.setItem("name", data.name);
+      sessionStorage.setItem("gender", data.gender);
+      sessionStorage.setItem("id", data.id);
+      router.push("/store");
     } catch (err: any) {
       setError(err.message || "An unknown error occurred");
+      toast.error("🦄 " + err.message || "An unknown error occurred", {
+        position: "top-right",
+        autoClose: 3500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Flip,
+      });
     } finally {
       setLoading(false);
     }
@@ -58,18 +76,20 @@ export default function LoginPage() {
   return (
     <div>
       <Nav />
+      <ToastContainer />
+
       <div className="font-primary font-extrabold bg-gray-50 min-h-screen flex justify-center items-center md:items-center p-8">
-        <Card className="w-full max-w-lg">
+        <Card className="bg-gray-50 w-full max-w-lg">
           <CardHeader>
             <CardTitle className="text-2xl flex justify-center">
               Login
             </CardTitle>
           </CardHeader>
 
-          <CardFooter>
+          <CardFooter className="text-lg flex justify-center">
             <div>
               <section className="bg-gray-50 font-primary font-extrabold">
-                <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
+                <div className="flex flex-col px-6 py-8 mx-auto lg:py-0">
                   <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0 ">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                       <form

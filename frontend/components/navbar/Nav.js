@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import Categories from "@/components/navbar/SelectCategory";
 import Search from "@/components/navbar/InputSearch";
-import { User } from '../../app/dashboard/user';
+import { User } from '@/components/navbar/user';
 
 
 function Nav({ onCategoryChange , onSearch}) {

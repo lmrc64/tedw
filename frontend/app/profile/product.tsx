@@ -1,19 +1,30 @@
-import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
-import { TableCell, TableRow } from '@/components/ui/table';
-import { SelectProduct } from '@/lib/db';
-import { deleteProduct } from './actions';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
+import { TableCell, TableRow } from "@/components/ui/table";
 
-export function Product({ product }: { product: SelectProduct }) {
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  image: string[];
+  price: number;
+  stock: number;
+  status: string;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+  user: string;
+}
+export function Product({ product }: { product: Product }) {
   return (
     <TableRow>
       <TableCell className="hidden sm:table-cell">
@@ -21,7 +32,7 @@ export function Product({ product }: { product: SelectProduct }) {
           alt="Product image"
           className="aspect-square rounded-md object-cover"
           height="64"
-          src={product.imageUrl}
+          src={product.image[0].trim()}
           width="64"
         />
       </TableCell>
@@ -34,7 +45,7 @@ export function Product({ product }: { product: SelectProduct }) {
       <TableCell className="hidden md:table-cell">{`$${product.price}`}</TableCell>
       <TableCell className="hidden md:table-cell">{product.stock}</TableCell>
       <TableCell className="hidden md:table-cell">
-        {product.availableAt.toLocaleDateString("en-US")}
+        {new Date(product.createdAt).toLocaleDateString("es-ES")}
       </TableCell>
       <TableCell>
         <DropdownMenu>
@@ -48,7 +59,7 @@ export function Product({ product }: { product: SelectProduct }) {
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>Edit</DropdownMenuItem>
             <DropdownMenuItem>
-              <form action={deleteProduct}>
+              <form>
                 <button type="submit">Delete</button>
               </form>
             </DropdownMenuItem>

@@ -1,19 +1,21 @@
-import { Button } from '@/components/ui/button';
-// import { auth, signOut } from '@/lib/auth';
-import Image from 'next/image';
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import Link from 'next/link';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+export function User() {
+  let gender = sessionStorage.getItem("gender");
+  let id = sessionStorage.getItem("id");
 
-export async function User() {
-  // let session = await auth();
-  // let user = session?.user;
+  const handleSignOut = () => {
+    sessionStorage.clear();
+  };
 
   return (
     <DropdownMenu>
@@ -24,38 +26,38 @@ export async function User() {
           className="overflow-hidden rounded-full"
         >
           <Image
-            // src={user?.image ?? '/placeholder-user.jpg'}
-            src={""}
-            width={36}
-            height={36}
+            src={
+              gender ? "/profile/" + gender + ".png" : "/profile/profile.png"
+            }
+            width={50}
+            height={50}
             alt="Avatar"
             className="overflow-hidden rounded-full"
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {true ? (
+      {id ? (
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>
+            <Link href="/profile">My Account</Link>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <form
-              action={async () => {
-                //'use server';
-                // await signOut();
-              }}
-            >
-              <button type="submit">Sign Out</button>
-            </form>
+            <Link href="/">Settings</Link>
           </DropdownMenuItem>
-        ) : (
+          <DropdownMenuItem>
+            <Link href="/" onClick={handleSignOut}>
+              Sign Out
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      ) : (
+        <DropdownMenuContent align="end">
           <DropdownMenuItem>
             <Link href="/login">Sign In</Link>
           </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
+        </DropdownMenuContent>
+      )}
     </DropdownMenu>
   );
 }

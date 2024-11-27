@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import ProductCard from "@/components/home/ProductCard";
-
+import { Flip, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function ProductListings({ category, searchQuery }) {
+  
   console.log("searchQuery en ProductListings:", searchQuery);
   console.log("category en ProductListings:", category);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-
-
 
   useEffect(() => {
     async function fetchProducts() {

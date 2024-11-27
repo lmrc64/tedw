@@ -5,6 +5,26 @@ import * as TabsPrimitive from "@radix-ui/react-tabs"
 
 import { cn } from "@/lib/utils"
 
+import { useEffect, useState } from 'react';
+
+interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  image: string[];
+  price: number;
+  stock: number;
+  status: string;
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+  user: string;
+}
+
+
+
+
+
 const Tabs = TabsPrimitive.Root
 
 const TabsList = React.forwardRef<
