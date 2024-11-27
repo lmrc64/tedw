@@ -4,8 +4,8 @@ const Category = require('../models/Category');
 // Crear un nuevo producto
 const createProduct = async (req, res) => {
   try {
-    const { name, description, image, price, stock, status } = req.body;
-    const newProduct = new Product({name,  description, image, price, stock, status, category});
+    const { name, description, image, price, stock, status, user } = req.body;
+    const newProduct = new Product({name,  description, image, price, stock, status, category, user});
     
     await newProduct.save();
 
@@ -21,14 +21,14 @@ const createProduct = async (req, res) => {
 // Crear un nuevo producto
 const createProductNameCategory = async (req, res) => {
   try {
-    const { name, description, image, price, stock, status, category  } = req.body;
+    const { name, description, image, price, stock, status, category, user  } = req.body;
 
     const foundCategory = await Category.findOne({ category: category });
     
     if (!foundCategory) 
       return res.status(404).json({ message: `Category '${category}' not found` });
     
-    const newProduct = new Product({ name, description, image, price, stock,  status, category: foundCategory._id});
+    const newProduct = new Product({ name, description, image, price, stock,  status, category: foundCategory._id, user});
     
     await newProduct.save();
     res.status(201).json({
@@ -86,6 +86,43 @@ const getProductByCategory = async (req, res) => {
   }
 };
 
+// Obtener un producto por ID del usuario
+const getProductByUser = async (req, res) => {
+  try {
+    const { user } = req.params;
+    const { q = '', offset = 0, limit = 5 } = req.query; 
+
+    const offsetNum = parseInt(offset, 10);
+    const limitNum = parseInt(limit, 10);
+
+    const searchFilter = {
+      user,
+      name: { $regex: q, $options: 'i' }, 
+    };
+
+    if (!user) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    const [products, totalProducts] = await Promise.all([
+      Product.find(searchFilter)
+        .skip(offsetNum)
+        .limit(limitNum)
+        .lean(), 
+      Product.countDocuments(searchFilter), 
+    ]);
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: 'No products found for the specified user' });
+    }
+
+    res.status(200).json({ products, newOffset: offsetNum + products.length,  totalProducts});
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching products', error: err.message });
+  }
+};
+
+// Obtener un producto por nombre
 const getProductByName = async (req, res) => {
   const { name, page = 1, limit = 10 } = req.query; 
 
@@ -154,4 +191,5 @@ module.exports = {
   createProductNameCategory,
   getProductByCategory,
   getProductByName,
+  getProductByUser,
 };

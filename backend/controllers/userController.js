@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 // Crear un nuevo usuario
 const createUser = async (req, res) => {
   try {
-    const { firstname, lastname, email, password, gender, phone, country, state, city, zip } = req.body;
+    const { firstname, lastname, email, password, gender, phone, country, state, city, zip, streat } = req.body;
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already exists' });
@@ -26,6 +26,7 @@ const createUser = async (req, res) => {
       country,
       state,
       city,
+      streat,
       zip,
       admin: admin || false,
     });
@@ -89,7 +90,7 @@ const login = async (req, res) => {
       const name = user.firstname + " " + user.lastname
   
       //res.status(200).send({ user: user.email});
-      res.status(200).send({ user: user.email, token: token, name:name , gender: user.gender});
+      res.status(200).send({ user: user.email, token: token, name:name , gender: user.gender, id: user._id});
 
     } catch (err) {
       res.status(500).send('Internal server error');

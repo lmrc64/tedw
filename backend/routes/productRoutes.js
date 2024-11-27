@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
 
-// Crear un producto
+// Crear un producto 
 router.post('/products', productController.createProduct);
 router.post('/products/name', productController.createProductNameCategory);
 
@@ -11,6 +11,7 @@ router.post('/products/name', productController.createProductNameCategory);
 router.get('/products', productController.getAllProducts);
 router.get('/productsCategory', productController.getProductByCategory);
 router.get('/products/search', productController.getProductByName);
+router.get('/products/user/:user', productController.getProductByUser);
 
 
 // Obtener un producto por ID

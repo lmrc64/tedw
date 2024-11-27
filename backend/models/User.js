@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   country: { type: String },
   state: { type: String },
   city:{ type: String },
+  streat:{ type: String},
   zip: { type: String },
   admin: { type: Boolean, required: true, default: false},
 },{timestamps: true});

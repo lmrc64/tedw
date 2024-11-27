@@ -15,6 +15,8 @@ const productSchema = new mongoose.Schema ({
     stock: { type: Number, required: true },
     status: { type: String, enum: ['New', 'Used'], default: 'New' },
     category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    visible: { type: Boolean, required: true, default: true},
   },{timestamps: true});
   
 module.exports = mongoose.model('Product', productSchema);
