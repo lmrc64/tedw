@@ -16,6 +16,7 @@ const orderRoutes = require("./routes/orderRoutes");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authJwt = require('./libs/jwt')
+const bucketRouter = require('./bucket/connection')
 
 main().catch((err) => console.log(err));
 
@@ -31,6 +32,8 @@ async function main() {
     app.use(`${api_prefix}`, orderRoutes);
     app.use(`${api_prefix}`, productRoutes);
     app.use(`${api_prefix}`, userRoutes);
+    app.use(`${api_prefix}`, bucketRouter);
+
     
     app.listen(port, () => {
       console.log(`Listening on port ${port}!`);

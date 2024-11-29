@@ -34,7 +34,7 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:3008/api/v1/login", {
+      const response = await fetch(process.env.API_ROUTE + "/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

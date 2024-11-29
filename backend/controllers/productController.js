@@ -4,7 +4,7 @@ const Category = require('../models/Category');
 // Crear un nuevo producto
 const createProduct = async (req, res) => {
   try {
-    const { name, description, image, price, stock, status, user } = req.body;
+    const { name, description, image, price, stock, status, category, user } = req.body;
     const newProduct = new Product({name,  description, image, price, stock, status, category, user});
     
     await newProduct.save();

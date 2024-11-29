@@ -1,12 +1,12 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlusCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ProductsTable } from './products-table';
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { File, PlusCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ProductsTable } from "./products-table";
+import Link from "next/link";
 interface Product {
-  _id: string; 
+  _id: string;
   name: string;
   description: string;
   image: string[];
@@ -19,12 +19,13 @@ interface Product {
   user: string;
 }
 
-
 async function getProducts(userId: string, search: string, offset: number) {
-  const response = await fetch(`http://localhost:3008/api/v1/products/user/${userId}?q=${search}&offset=${offset}&limit=5`);
-  
+  const response = await fetch(
+    process.env.API_ROUTE +`/products/user/${userId}?q=${search}&offset=${offset}&limit=5`
+  );
+
   if (!response.ok) {
-    throw new Error('Error fetching data');
+    throw new Error("Error fetching data");
   }
 
   const data = await response.json();
@@ -36,15 +37,16 @@ async function getProducts(userId: string, search: string, offset: number) {
   };
 }
 
-
-export default function ProductsPage(props: { searchParams: Promise<{ q: string; offset: string }> }) {
+export default function ProductsPage(props: {
+  searchParams: Promise<{ q: string; offset: string }>;
+}) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [newOffset, setNewOffset] = useState<number>(0);
   const [totalProducts, setTotalProducts] = useState<number>(0);
-  
-  const [search, setSearch] = useState<string>('');
+
+  const [search, setSearch] = useState<string>("");
   const [offset, setOffset] = useState(0);
   let user = sessionStorage.getItem("id");
 
@@ -52,7 +54,11 @@ export default function ProductsPage(props: { searchParams: Promise<{ q: string;
     if (user) {
       const fetchProducts = async () => {
         try {
-          const { products, newOffset, totalProducts } = await getProducts(user, search, offset);
+          const { products, newOffset, totalProducts } = await getProducts(
+            user,
+            search,
+            offset
+          );
           const mappedProducts = products.map((p: Product) => ({
             ...p,
             id: p._id,
@@ -66,10 +72,10 @@ export default function ProductsPage(props: { searchParams: Promise<{ q: string;
           setLoading(false);
         }
       };
-      
+
       fetchProducts();
     }
-  }, [user, search, offset]); 
+  }, [user, search, offset]);
 
   function handlePrevPage() {
     if (offset > 0) {
@@ -92,20 +98,25 @@ export default function ProductsPage(props: { searchParams: Promise<{ q: string;
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="archived" className="hidden sm:flex">Archived</TabsTrigger>
+          <TabsTrigger value="archived" className="hidden sm:flex">
+            Archived
+          </TabsTrigger>
         </TabsList>
         <div className="ml-auto flex items-center gap-2">
-          <Button size="sm" variant="outline" className="h-8 gap-1 bg-purple-500" >
-            <File className="h-3.5 w-3.5 text-white" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap text-white">Export</span>
-          </Button>
-          <Button size="sm" className="h-8 gap-1 bg-purple-500">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Product</span>
-          </Button>
+          <Link href="/profile/newProduct">
+            <Button
+              size="sm"
+              className="h-8 gap-1 bg-purple-500 hover:bg-purple-900"
+            >
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Add Product
+              </span>
+            </Button>
+          </Link>
         </div>
       </div>
-      
+
       <TabsContent value="all">
         <ProductsTable
           products={products}

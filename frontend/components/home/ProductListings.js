@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import ProductCard from "@/components/home/ProductCard";
-import { Flip, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 export default function ProductListings({ category, searchQuery }) {
   
@@ -15,7 +14,7 @@ export default function ProductListings({ category, searchQuery }) {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        let url = "http://localhost:3008/api/v1/products";
+        let url = process.env.API_ROUTE +"/products";
         if (category) {
           url += `Category?category=${category}`;
         }

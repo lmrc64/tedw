@@ -24,6 +24,8 @@ interface Product {
   updatedAt: string;
   user: string;
 }
+
+
 export function Product({ product }: { product: Product }) {
   return (
     <TableRow>

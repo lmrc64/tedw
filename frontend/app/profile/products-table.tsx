@@ -19,6 +19,7 @@ import { Product } from "./product";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SearchInput } from "./search";
 
 interface Product {
   _id: string;
@@ -47,7 +48,6 @@ export function ProductsTable({
   onPrevPage: () => void;
   onNextPage: () => void;
 }) {
-
   const productsPerPage = 5;
   const startIndex = offset;
   const endIndex = Math.min(offset + productsPerPage, totalProducts);
@@ -55,6 +55,7 @@ export function ProductsTable({
   return (
     <Card>
       <CardHeader>
+        <SearchInput />
         <CardTitle>Products</CardTitle>
         <CardDescription>
           Manage your products and view their sales performance.

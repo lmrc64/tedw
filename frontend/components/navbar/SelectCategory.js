@@ -6,7 +6,7 @@ export default function Categories({ onCategoryChange }) {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await fetch("http://localhost:3008/api/v1/categories");
+        const res = await fetch(process.env.API_ROUTE +"/categories");
         if (!res.ok) throw new Error("Error al obtener las categorías");
         const data = await res.json();
         setCategories(data.categories);

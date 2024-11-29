@@ -59,7 +59,7 @@ export default function LoginPage() {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3008/api/v1/register", {
+      const response = await fetch(process.env.API_ROUTE +"/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
