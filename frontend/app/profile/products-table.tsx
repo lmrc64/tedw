@@ -16,7 +16,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Product } from "./product";
-import { useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SearchInput } from "./search";
@@ -35,19 +34,21 @@ interface Product {
   user: string;
 }
 
+type ProductTableProps = {
+  products: Product[];
+  totalProducts: number;
+  offset: number;
+  onPrevPage: (event: React.MouseEvent) => void;
+  onNextPage: (event: React.MouseEvent) => void;
+};
+
 export function ProductsTable({
   products,
   totalProducts,
   offset,
   onPrevPage,
   onNextPage,
-}: {
-  products: Product[];
-  totalProducts: number;
-  offset: number;
-  onPrevPage: () => void;
-  onNextPage: () => void;
-}) {
+}: ProductTableProps) {
   const productsPerPage = 5;
   const startIndex = offset;
   const endIndex = Math.min(offset + productsPerPage, totalProducts);
@@ -86,7 +87,7 @@ export function ProductsTable({
         </Table>
       </CardContent>
       <CardFooter>
-        <form className="flex items-center w-full justify-between">
+        <div className="flex items-center w-full justify-between">
           <div className="text-xs text-muted-foreground">
             Showing{" "}
             <strong>
@@ -114,7 +115,7 @@ export function ProductsTable({
               <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
-        </form>
+        </div>
       </CardFooter>
     </Card>
   );

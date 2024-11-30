@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { toast, Flip } from "react-toastify";
+import { showToast } from "@/components/interfaces/ToastNotification";
 
 type ProductFormProps = {
   onSubmit: (formData: any) => void;
@@ -10,11 +10,7 @@ type ProductFormProps = {
   success: string | null;
 };
 
-export default function ProductForm({
-  onSubmit,
-  error,
-  success,
-}: ProductFormProps) {
+export default function ProductForm({ onSubmit }: ProductFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -25,77 +21,46 @@ export default function ProductForm({
     category: "",
     user: sessionStorage.getItem("id"),
   });
-  const [categories, setCategories] = useState([]);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
+  const [categories, setCategories] = useState<any[]>([]);
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
-
   const [loading, setLoading] = useState(false);
 
-  // Fetch categories when component mounts
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const res = await fetch(process.env.API_ROUTE +"/categories");
-        if (!res.ok) throw new Error("Error al obtener las categorías");
+        const res = await fetch(process.env.API_ROUTE + "/categories");
+        if (!res.ok) throw new Error("Error fetching categories");
         const data = await res.json();
         setCategories(data.categories);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error(error);
       }
     }
     fetchCategories();
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-
     if (type === "file") {
-      const file = (e.target as HTMLInputElement).files?.[0] || null;
-      setFormData({
-        ...formData,
-        image: file,
-      });
+      setSelectedImages(Array.from(e.target.files || []));
     } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!formData.name || !formData.price || !formData.image) {
-      toast.warn("🦄 Please fill all inputs!!", {
-        position: "top-right",
-        autoClose: 3500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Flip,
-      });
-
+      showToast("Please first confirm the images!!", "warn");
       return;
     }
     onSubmit(formData);
-
-    setFormData({
-      name: "",
-      description: "",
-      image: "",
-      price: "",
-      stock: "",
-      status: "",
-      category: "",
-      user: sessionStorage.getItem("id"),
-    });
-    setSelectedImage(null);
+    if (sessionStorage.getItem("errorCreateForm") != "true"){
+      setFormData({ name: "", description: "", image: "", price: "", stock: "", status: "", category: "", user: sessionStorage.getItem("id") });
+      setSelectedImages([]);
+    }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,46 +79,26 @@ export default function ProductForm({
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedImage(e.target.files[0]);
-    }
-  };
-
   // Subir la imagen y obtener la URL
   const uploadImages = async () => {
-    if (selectedImages.length === 0) {
-      alert("Por favor selecciona imágenes");
-      return;
-    }
+    if (!selectedImages.length) return alert("Please select images");
 
     setLoading(true);
-
-    const uploadedUrls: string[] = [];
-    for (const image of selectedImages) {
-      const formData = new FormData();
-      formData.append("image", image);
-
-      try {
-        const response = await axios.post(
-          process.env.API_ROUTE +"/upload_image",
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-
-        uploadedUrls.push(response.data.url);
-      } catch (error) {
-        console.error("Error al subir la imagen:", error);
-        alert("Error al subir una o más imágenes");
-      }
+    try {
+      const uploadedUrls = await Promise.all(selectedImages.map(async (image) => {
+        const formData = new FormData();
+        formData.append("image", image);
+        const response = await axios.post(process.env.API_ROUTE + "/upload_image", formData, { headers: { "Content-Type": "multipart/form-data" } });
+        return response.data.url;
+      }));
+      setUploadedImageUrls(uploadedUrls);
+      setFormData((prev) => ({ ...prev, image: uploadedUrls }));
+      alert("Images uploaded successfully");
+    } catch (error) {
+      alert("Error uploading images");
+    } finally {
+      setLoading(false);
     }
-
-    setUploadedImageUrls(uploadedUrls); // Guardar las URLs subidas en el estado
-    setFormData((prevState) => ({ ...prevState, image: uploadedUrls }));
-    alert("Imágenes subidas con éxito");
-    setLoading(false);
   };
 
   return (
@@ -288,35 +233,58 @@ export default function ProductForm({
 
       {/* Product Image */}
       <div className="w-full flex flex-col justify-center items-center space-y-4 mb-4">
-        <div>
-          <img
-            id="preview_img"
-            className="h-52 w-52 object-cover rounded-lg"
-            src="/profile/unknow.png"
-            alt="Product preview"
-          />
-        </div>
-        <label>
-          <span className="sr-only">Choose product image</span>
+        <label
+          htmlFor="dropzone-file"
+          className="flex flex-col items-center justify-center w-full h-64 border-2 border-purple-300 border-dashed rounded-lg cursor-pointer bg-gray-50"
+        >
+          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg
+              className="w-8 h-8 mb-4 text-purple-500"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 16"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+              />
+            </svg>
+            <p className="mb-2 text-sm text-purple-500 ">
+              <span className="font-semibold">Click to upload</span>
+            </p>
+            <p className="text-xs text-purple-500 ">
+              SVG, PNG, JPG, WEBP or GIF
+            </p>
+            <p className="mt-2 text-m text-purple-500 ">
+              <span className=" font-semibold">
+                Then click on Confirm Images
+              </span>
+            </p>
+          </div>
           <input
+            id="dropzone-file"
             type="file"
-            id="image"
+            className="hidden"
             onChange={handleFileChange}
-            accept="image/jpeg, image/png, image/gif, image/webp"
+            accept="image/jpeg, image/png, image/gif, image/webp, image/svg"
             multiple
-            className="block w-full text-sm text-slate-500
-            file:mr-4 file:py-2 file:px-4
-            file:rounded-full file:border-0
-            file:text-sm file:font-semibold
-            file:bg-violet-50 file:text-violet-700
-            hover:file:bg-violet-100"
           />
         </label>
-        <button type="button" onClick={uploadImages} disabled={loading}>
-          {loading ? "Subiendo..." : "Subir Imagen"}
+        <button
+          type="button"
+          onClick={uploadImages}
+          disabled={loading}
+          className=" text-white bg-purple-500 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+        >
+          {loading ? "Subiendo..." : "Confirm Images"}
         </button>
       </div>
-      {/* Mostrar la URL de la imagen subida */}
+
+      {/* Mostrar imagenes subida */}
       <div className="grid grid-cols-3 gap-4">
         {selectedImages.map((image, index) => (
           <div key={index}>
@@ -328,30 +296,32 @@ export default function ProductForm({
           </div>
         ))}
       </div>
-      {uploadedImageUrls.length > 0 && (
-        <div>
-          <p>Imágenes subidas con éxito:</p>
-          <ul>
-            {uploadedImageUrls.map((url, index) => (
-              <li key={index}>
-                <a href={url} target="_blank" rel="noopener noreferrer">
-                  {url}
-                </a>
-                <img
-                  src={url}
-                  alt={`Uploaded ${index + 1}`}
-                  style={{ width: "150px", marginTop: "10px" }}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
+      {/* Mostrar la URL de la imagen subida 
+        {uploadedImageUrls.length > 0 && (
+          <div>
+            <p>Imágenes subidas con éxito:</p>
+            <ul>
+              {uploadedImageUrls.map((url, index) => (
+                <li key={index}>
+                  <a href={url} target="_blank" rel="noopener noreferrer">
+                    {url}
+                  </a>
+                  <img
+                    src={url}
+                    alt={`Uploaded ${index + 1}`}
+                    style={{ width: "150px", marginTop: "10px" }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      */}
+      
       {/* Submit Button */}
       <button
         type="submit"
-        className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+        className="w-full text-white bg-purple-800 hover:bg-purple-900 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
       >
         Create Product
       </button>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import CountrySelect from "./countryList";
+import CountrySelect from "@/components/interfaces/countryList";
 
 type SignUpFormProps = {
   onSubmit: (formData: any) => void;
@@ -9,7 +9,11 @@ type SignUpFormProps = {
   success: string | null;
 };
 
-export default function SignUpForm({ onSubmit, error, success }: SignUpFormProps) {
+export default function SignUpForm({
+  onSubmit,
+  error,
+  success,
+}: SignUpFormProps) {
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -25,56 +29,45 @@ export default function SignUpForm({ onSubmit, error, success }: SignUpFormProps
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(formData); 
+    onSubmit(formData);
   };
-  
+
+  const renderInput = (
+    label: string,
+    id: string,
+    type: string,
+    value: string,
+    placeholder: string = ""
+  ) => (
+    <div className="mb-4">
+      <label htmlFor={id} className="block text-sm font-medium text-purple-500">
+        {label}
+      </label>
+      <input
+        type={type}
+        id={id}
+        name={id}
+        value={value}
+        onChange={handleChange}
+        placeholder={placeholder}
+        className="bg-gray-50 border border-gray-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
+        required
+      />
+    </div>
+  );
 
   return (
     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-      <div className="mb-4">
-        <label
-          htmlFor="firstname"
-          className="block text-sm font-medium text-purple-500"
-        >
-          Firstname
-        </label>
-        <input
-          type="text"
-          id="firstname"
-          name="firstname"
-          className="bg-gray-50 border border-purple-500 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
-          value={formData.firstname}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      
-      <div className="mb-4">
-        <label
-          htmlFor="lastname"
-          className="block text-sm font-medium text-purple-500"
-        >
-          Lastname
-        </label>
-        <input
-          type="text"
-          id="lastname"
-          name="lastname"
-          className="bg-gray-50 border border-gray-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
-          value={formData.lastname}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
+      {renderInput("Firstname", "firstname", "text", formData.firstname)}
+      {renderInput("Lastname", "lastname", "text", formData.lastname)}
       <div className="mb-4">
         <label
           htmlFor="gender"
@@ -85,58 +78,32 @@ export default function SignUpForm({ onSubmit, error, success }: SignUpFormProps
         <select
           id="gender"
           name="gender"
-          className="bg-gray-50 border border-gray-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
           value={formData.gender}
           onChange={handleChange}
+          className="bg-gray-50 border border-gray-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
           required
         >
-          <option value="">
-            Select your gender
-          </option>
+          <option value="">Select your gender</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
           <option value="Other">Other</option>
         </select>
       </div>
 
-      <div className="mb-4">
-        <label
-          htmlFor="email"
-          className="block mb-2 text-sm font-medium text-purple-500 "
-        >
-          Your email
-        </label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          className="bg-gray-50 border border-gray-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
-          placeholder="name@company.com"
-          value={formData.email}
-          onChange={handleChange}
-          required={true}
-        />
-      </div>
-
-      <div className="mb-4">
-        <label
-          htmlFor="password"
-          className="block mb-2 text-sm font-medium text-purple-500"
-        >
-          Password
-        </label>
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="••••••••"
-          className="bg-gray-50 border border-gray-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5 "
-          value={formData.password}
-          onChange={handleChange}
-          required={true}
-        />
-      </div>
-      
+      {renderInput(
+        "Your email",
+        "email",
+        "email",
+        formData.email,
+        "name@company.com"
+      )}
+      {renderInput(
+        "Password",
+        "password",
+        "password",
+        formData.password,
+        "••••••••"
+      )}
       <div className="mb-4">
         <label
           htmlFor="confirm-password"
@@ -155,32 +122,30 @@ export default function SignUpForm({ onSubmit, error, success }: SignUpFormProps
           required={true}
         />
       </div>
-
+      
       <CountrySelect
-        onChange={(country) => setFormData({ ...formData, country })}
+        onChange={(country) => setFormData((prev) => ({ ...prev, country }))}
         value={formData.country}
       />
 
-      {/* Terms and Conditions */}
       <div className="flex items-start">
-        <div className="flex items-center h-5">
-          <input
-            id="terms"
-            type="checkbox"
-            className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-purple-500"
-            name="terms"
-            checked={formData.terms}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="ml-3 text-sm">
-          <label htmlFor="terms" className="font-light text-purple-500">
-            I accept the{" "}
-            <a className="font-medium text-purple-600 hover:underline" href="#">
-              Terms and Conditions
-            </a>
-          </label>
-        </div>
+        <input
+          id="terms"
+          type="checkbox"
+          className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-purple-500"
+          name="terms"
+          checked={formData.terms}
+          onChange={handleChange}
+        />
+        <label
+          htmlFor="terms"
+          className="ml-3 text-sm font-light text-purple-500"
+        >
+          I accept the{" "}
+          <a href="#" className="font-medium text-purple-600 hover:underline">
+            Terms and Conditions
+          </a>
+        </label>
       </div>
 
       <button

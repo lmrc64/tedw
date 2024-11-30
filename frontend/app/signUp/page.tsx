@@ -4,7 +4,8 @@ import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { useState } from "react";
 import Nav from "./Nav";
 import SignUpForm from "./SignUpForm";
-import ToastNotification, { showToast } from "./ToastNotification";
+import { showToast } from "@/components/interfaces/ToastNotification";
+import { ToastContainer } from "react-toastify";
 
 export default function LoginPage() {
   interface FormData {
@@ -23,9 +24,7 @@ export default function LoginPage() {
 
   const validateForm = (Data: FormData) => {
     const { password, confirmPassword, terms } = Data;
-    console.log("Form data received in LoginPage:", confirmPassword); 
-
-    if (password !== confirmPassword) return "Password do not match.";
+    if (password !== confirmPassword) return "Passwords don´t match.";
     if (password.length < 8)
       return "The password must be at least 8 characters";
     if (!terms) return "You must accept the terms and conditions";
@@ -35,16 +34,16 @@ export default function LoginPage() {
   const handleSubmit = async (formData: any) => {
     setError(null);
     setSuccess(null);
-    
+
     const validationError = validateForm(formData);
     if (validationError) {
-      console.log("Form data received in LoginPage:", formData); 
+      console.log("Form data received in LoginPage:", formData);
       setError(validationError);
       showToast(validationError, "warn");
       return;
     }
     try {
-      const response = await fetch(process.env.API_ROUTE +"/register", {
+      const response = await fetch(process.env.API_ROUTE + "/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -64,7 +63,7 @@ export default function LoginPage() {
 
   return (
     <div>
-      <ToastNotification />
+      <ToastContainer pauseOnFocusLoss={false} />
       <Nav />
       <div className="font-primary font-extrabold bg-gray-50 min-h-screen flex justify-center items-center md:items-center p-8">
         <Card className="bg-gray-50 w-full max-w-lg">

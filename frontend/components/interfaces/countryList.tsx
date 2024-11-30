@@ -6,8 +6,8 @@ interface Country {
 }
 
 interface CountrySelectProps {
-  onChange: (value: string) => void; // Prop para comunicar el país seleccionado al componente padre
-  value: string; // Valor actual del país seleccionado
+  onChange: (value: string) => void; 
+  value: string; 
 }
 
 const CountrySelect: React.FC<CountrySelectProps> = ({ onChange, value }) => {
@@ -25,7 +25,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({ onChange, value }) => {
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange(event.target.value); // Llama a la función del padre para actualizar el estado
+    onChange(event.target.value); 
   };
 
   return (

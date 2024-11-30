@@ -19,8 +19,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import ToastNotification from "./ToastNotification";
-import { Button } from "@/components/ui/button";
+import { showToast } from "@/components/interfaces/ToastNotification";
+import { ToastContainer } from "react-toastify";import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Tooltip,
@@ -59,7 +59,7 @@ function DesktopNav() {
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         <Link
-          href="/"
+          href="/profile"
           className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-purple-700 text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
         >
           <Image
@@ -98,7 +98,7 @@ function DesktopNav() {
 function MobileNav() {
   return (
     <Sheet>
-      <ToastNotification />
+      <ToastContainer pauseOnFocusLoss={false}/>
       <SheetTrigger asChild>
         <Button size="icon" variant="outline" className="sm:hidden">
           <PanelLeft className="h-5 w-5" />

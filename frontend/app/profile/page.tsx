@@ -77,18 +77,20 @@ export default function ProductsPage(props: {
     }
   }, [user, search, offset]);
 
-  function handlePrevPage() {
+  function handlePrevPage(event: React.MouseEvent) {
+    event.preventDefault();
     if (offset > 0) {
       setOffset(offset - 5);
     }
   }
-
-  function handleNextPage() {
+  
+  function handleNextPage(event: React.MouseEvent) {
+    event.preventDefault();
     if (offset + 5 < totalProducts) {
       setOffset(offset + 5);
     }
   }
-
+  
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
