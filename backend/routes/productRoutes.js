@@ -23,4 +23,16 @@ router.put('/products/:id', productController.updateProduct);
 // Eliminar un producto por ID
 router.delete('/products/:id', productController.deleteProduct);
 
+//Change Visible
+router.patch('/products/:id/visibility', productController.updateProductVisibility);
+
+//Get Visible
+router.get('/products/visibility/all', productController.getAllProductsVisibles);
+router.get('/products/:id/visibility', productController.getProductByIdVisible);
+
+
+//Get Products Visibility
+router.get('/products/user/:user/:visible', productController.getProductByUserVisibility);
+
+
 module.exports = router;
