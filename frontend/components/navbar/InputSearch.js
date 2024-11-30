@@ -7,7 +7,7 @@ export default function Search( {onSearch} ) {
     const value = event.target.value;
     setQuery(value);
 
-    if (value.length >= 5) {
+    if (value.length >= 0) {
       onSearch(value);
     }
   };

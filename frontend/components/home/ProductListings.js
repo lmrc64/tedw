@@ -18,7 +18,7 @@ export default function ProductListings({ category, searchQuery }) {
         if (category) {
           url += `Category?category=${category}`;
         }
-        if (searchQuery && searchQuery.length >= 5) {
+        if (searchQuery && searchQuery.length >= 3) {
           url += `/search?name=${searchQuery}`;
         }
         const res = await fetch(url);

@@ -32,6 +32,7 @@ interface Product {
   createdAt: string;
   updatedAt: string;
   user: string;
+  visible: boolean;
 }
 
 type ProductTableProps = {
@@ -40,6 +41,8 @@ type ProductTableProps = {
   offset: number;
   onPrevPage: (event: React.MouseEvent) => void;
   onNextPage: (event: React.MouseEvent) => void;
+  onSearch: (query: string) => void;
+  onDelete: (id: string) => void; 
 };
 
 export function ProductsTable({
@@ -48,6 +51,8 @@ export function ProductsTable({
   offset,
   onPrevPage,
   onNextPage,
+  onSearch, 
+  onDelete
 }: ProductTableProps) {
   const productsPerPage = 5;
   const startIndex = offset;
@@ -56,7 +61,7 @@ export function ProductsTable({
   return (
     <Card>
       <CardHeader>
-        <SearchInput />
+        <SearchInput onSearch={onSearch}/>
         <CardTitle>Products</CardTitle>
         <CardDescription>
           Manage your products and view their sales performance.
@@ -81,10 +86,11 @@ export function ProductsTable({
           </TableHeader>
           <TableBody>
             {products.map((product) => (
-              <Product key={product._id} product={product} />
-            ))}
+              <Product key={product._id} product={product}   onDelete={onDelete}/>
+            ))}         
           </TableBody>
         </Table>
+
       </CardContent>
       <CardFooter>
         <div className="flex items-center w-full justify-between">
