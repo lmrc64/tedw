@@ -14,6 +14,8 @@ function authJwt() {
             `${api}/login`,
             `${api}/register`,
             `${api}/upload_image`,
+
+            `${api}/orders`,
         ]
     })
 }

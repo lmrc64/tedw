@@ -15,6 +15,12 @@ const orderSchema =  new mongoose.Schema ({
     subtotal: { type: Number, required: true },
     total: { type: Number, required: true },
     address: { type: String, required: true },
+    paymentMethod: { type: String,  required: true },
+    billaddress: { type: String },
+    billname: { type: String },
+    billphone: { type: String },
+    billemail: { type: String },
+    billcompany: { type: String },
     status: { type: String, enum: ['Pending', 'Shipped', 'Delivered'], default: 'Pending' },
   }, {timestamps: true});
   
