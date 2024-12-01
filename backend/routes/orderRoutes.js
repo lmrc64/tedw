@@ -5,8 +5,18 @@ const orderController = require('../controllers/orderController');
 // Crear una nueva orden
 router.post('/orders', orderController.createOrder);
 
-//charts
+//charts for the user
 router.get('/monthlyOrders/:id', orderController.getUserMonthlyOrders)
+router.get('/monthlySales/:id', orderController.getUserMonthlySales) //Need to be fixed
+
+//charts for the admin
+router.get('/monthlyOrders', orderController.getMonthlyOrders)
+router.get('/weeklyOrders', orderController.getWeeklyOrders)
+router.get('/yearlyOrders', orderController.getYearlyOrders)
+
+
+router.get('/currentYearOrders', orderController.getCurrentYearOrders)
+router.get('/currentYearProducts', orderController.getCurrentYearProducts)
 
 // Obtener todas las órdenes
 router.get('/orders', orderController.getAllOrders);

@@ -18,12 +18,12 @@ ChartJS.register(
     Legend         // Leyenda del gráfico
 );
 
-const BarChart = ({labels, values}) => {
+const BarChart = ({title, labels, values}) => {
     const data = {
         labels: labels,
         datasets: [
             {
-                label: 'Ordenes mensuales',
+                label: title,
                 data: values,
                 backgroundColor: [
                     'rgba(75, 192, 192, 0.2)',
