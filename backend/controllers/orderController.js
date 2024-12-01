@@ -141,7 +141,7 @@ const getUserMonthlyOrders = async (req, res) => {
 
 const getUserMonthlySales = async (req, res) => {
   try {
-    const { id } = req.params; // Obtener el ID del usuario desde los parámetros de la solicitud
+    const { id } = req.params; // ID del usuario vendedor
 
     // Año actual
     const currentYear = new Date().getFullYear();
@@ -157,23 +157,44 @@ const getUserMonthlySales = async (req, res) => {
 
     // Agregación
     const monthlySales = await Order.aggregate([
+      // Filtrar órdenes del año actual
       {
         $match: {
-          user: new mongoose.Types.ObjectId(id), // Filtrar por usuario específico
           date: {
-            $gte: new Date(`${currentYear}-01-01`), // Fecha de inicio del año actual
-            $lt: new Date(`${currentYear + 1}-01-01`), // Fecha de inicio del próximo año
+            $gte: new Date(`${currentYear}-01-01`), // Inicio del año actual
+            $lt: new Date(`${currentYear + 1}-01-01`), // Inicio del próximo año
           },
         },
       },
+      // Descomponer el array de productos en documentos individuales
+      { $unwind: "$products" },
+      // Hacer un lookup para unir con la colección de productos
+      {
+        $lookup: {
+          from: "products", // Colección de productos
+          localField: "products.product", // Campo en órdenes
+          foreignField: "_id", // Campo en productos
+          as: "productDetails",
+        },
+      },
+      // Descomponer el array de detalles del producto
+      { $unwind: "$productDetails" },
+      // Filtrar por el usuario vendedor
+      {
+        $match: {
+          "productDetails.user": new mongoose.Types.ObjectId(id),
+        },
+      },
+      // Agrupar por mes y sumar las cantidades
       {
         $group: {
           _id: { $month: "$date" }, // Agrupar por mes
-          totalOrders: { $sum: 1 }, // Contar el número de órdenes
+          totalOrders: { $sum: "$products.quantity" }, // Sumar cantidades
         },
       },
+      // Ordenar por mes
       {
-        $sort: { _id: 1 }, // Ordenar por mes
+        $sort: { "_id": 1 },
       },
     ]);
 
@@ -182,7 +203,7 @@ const getUserMonthlySales = async (req, res) => {
       const found = monthlySales.find((order) => order._id === month);
       return {
         month: monthNames[month - 1], // Convertir índice a nombre del mes
-        totalSales: found ? found.totalSales : 0
+        totalSales: found ? found.totalOrders : 0, // Usar la cantidad encontrada o 0
       };
     });
 
@@ -191,6 +212,8 @@ const getUserMonthlySales = async (req, res) => {
     res.status(500).json({ message: "Error fetching monthly sales", error: err.message });
   }
 };
+
+
 
 //charts for the admin
 const getMonthlyOrders = async (req, res) => {

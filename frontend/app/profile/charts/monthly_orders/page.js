@@ -9,7 +9,8 @@ export default function Page() {
     useEffect(() => {
         const fetchMonthlyOrders = async () => {
             try {
-                const response = await fetch("http://localhost:3008/api/v1/monthlyOrders/673e7bdef73b581262939636");
+                //change for sessionStorage
+                const response = await fetch(process.env.API_ROUTE+"/monthlyOrders/673e7bdef73b581262939636");
                 if (!response.ok) {
                     throw new Error("Failed to fetch data from API");
                 }
@@ -33,7 +34,7 @@ export default function Page() {
     return (
         <div style={{ padding: "20px" }}>
             <h1>Gráficos con Chart.js</h1>
-            <BarChart title={"Sales Per Month"} labels={labels} values={values} />
+            <BarChart title={"Orders Per Month"} labels={labels} values={values} />
         </div>
     );
 }
