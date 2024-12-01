@@ -150,6 +150,25 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getCurrentYearUsers = async (req, res) => {
+  try {
+    // Año actual
+    const currentYear = new Date().getFullYear();
+
+    // Buscar usuarios que se hayan registrado en el año actual
+    const userCount = await User.countDocuments({
+      createdAt: {
+        $gte: new Date(`${currentYear}-01-01`), // Fecha de inicio del año actual
+        $lt: new Date(`${currentYear + 1}-01-01`), // Fecha de inicio del próximo año
+      },
+    });
+
+    res.status(200).json({ totalUsers: userCount });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching user count", error: err.message });
+  }
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -157,4 +176,6 @@ module.exports = {
   updateUser,
   deleteUser,
   login,
+
+  getCurrentYearUsers
 };

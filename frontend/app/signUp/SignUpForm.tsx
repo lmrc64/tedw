@@ -58,13 +58,14 @@ export default function SignUpForm({
         value={value}
         onChange={handleChange}
         placeholder={placeholder}
-        className="bg-gray-50 border border-gray-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
+        className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
         required
       />
     </div>
   );
 
   return (
+    <section className="bg-white px-4 py-6   rounded-md font-primary font-extrabold">
     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
       {renderInput("Firstname", "firstname", "text", formData.firstname)}
       {renderInput("Lastname", "lastname", "text", formData.lastname)}
@@ -80,7 +81,7 @@ export default function SignUpForm({
           name="gender"
           value={formData.gender}
           onChange={handleChange}
-          className="bg-gray-50 border border-gray-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
+          className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
           required
         >
           <option value="">Select your gender</option>
@@ -115,7 +116,7 @@ export default function SignUpForm({
           type="password"
           id="confirm-password"
           placeholder="••••••••"
-          className="bg-gray-50 border border-gray-300 text-purple-500 text-sm rounded-lg focus:ring-primary-600 focus:border-purple-600 block w-full p-2.5 "
+          className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-purple-600 block w-full p-2.5 "
           name="confirmPassword"
           value={formData.confirmPassword}
           onChange={handleChange}
@@ -158,5 +159,6 @@ export default function SignUpForm({
       {error && <p className="text-red-500">{error}</p>}
       {success && <p className="text-green-500">{success}</p>}
     </form>
+    </section>
   );
 }

@@ -14,7 +14,7 @@ function authJwt() {
             `${api}/login`,
             `${api}/register`,
             `${api}/upload_image`,
-
+            { url: new RegExp(`${api}/.*`), methods: ['GET'] },
             `${api}/orders`,
         ]
     })

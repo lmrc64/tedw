@@ -118,7 +118,7 @@ export default function ProductForm({ onSubmit }: ProductFormProps) {
           type="text"
           id="productname"
           name="name" // Cambiar el nombre a "name"
-          className="bg-gray-50 border border-purple-500 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
+          className="bg-gray-50 border border-purple-500 text-black text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
           value={formData.name}
           onChange={handleChange}
           required
@@ -136,7 +136,7 @@ export default function ProductForm({ onSubmit }: ProductFormProps) {
         <textarea
           id="description"
           name="description" // Cambiar el nombre a "description"
-          className="bg-gray-50 border border-purple-500 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
+          className="bg-gray-50 border border-purple-500 text-black text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
           value={formData.description}
           onChange={handleChange}
           rows={4}
@@ -157,7 +157,7 @@ export default function ProductForm({ onSubmit }: ProductFormProps) {
           id="category"
           value={formData.category}
           onChange={handleChange}
-          className="bg-gray-50 border border-purple-500 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
+          className="bg-gray-50 border border-purple-500 text-black text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
           required
         >
           <option value="" defaultValue>
@@ -185,7 +185,7 @@ export default function ProductForm({ onSubmit }: ProductFormProps) {
           id="price"
           value={formData.price}
           onChange={handleChange}
-          className="bg-gray-50 border border-purple-500 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
+          className="bg-gray-50 border border-purple-500 text-black text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
           required
         />
       </div>
@@ -204,7 +204,7 @@ export default function ProductForm({ onSubmit }: ProductFormProps) {
           id="stock"
           value={formData.stock}
           onChange={handleChange}
-          className="bg-gray-50 border border-purple-500 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
+          className="bg-gray-50 border border-purple-500 text-black text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
           required
         />
       </div>
@@ -222,7 +222,7 @@ export default function ProductForm({ onSubmit }: ProductFormProps) {
           id="status"
           value={formData.status}
           onChange={handleChange}
-          className="bg-gray-50 border border-purple-500 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
+          className="bg-gray-50 border border-purple-500 text-black text-sm rounded-lg focus:ring-purple-600 focus:border-purple-600 block w-full p-2.5"
           required
         >
           <option value="">Select Status</option>
