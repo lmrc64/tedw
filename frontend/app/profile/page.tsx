@@ -24,14 +24,14 @@ interface Product {
   visible: boolean;
 }
 
-async function getProducts(userId: string, search: string, offset: number) {
+async function getProducts(userId: string, search: string, offset: number, visibility: string) {
   
   const response = await fetch(
     process.env.API_ROUTE +
-      `/products/user/${userId}/true?q=${search}&offset=${offset}&limit=5`
+      `/products/user/${userId}/${visibility}?q=${search}&offset=${offset}&limit=5`
   );
   if (!response.ok) {
-    throw new Error("Error fetching dajjjjjjjjta");
+    throw new Error("Error fetching data");
   }
 
   const data = await response.json();
@@ -54,22 +54,23 @@ export default function ProductsPage(props: {
   const [productIdToDelete, setProductIdToDelete] = useState<string | null>(
     null
   );
+  const [visibility, setVisibility] = useState<string>("true");
 
   const [search, setSearch] = useState<string>(""); // Estado de búsqueda
   const [offset, setOffset] = useState(0);
   const user = sessionStorage.getItem("id");
   
-  
-
-
   useEffect(() => {
+    if(visibility=="true") sessionStorage.setItem("visibility", "True")
+    else  sessionStorage.setItem("visibility", "False")
     if (user) {
       const fetchProducts = async () => {
         try {
           const { products, newOffset, totalProducts } = await getProducts(
             user,
             search,
-            offset
+            offset,
+            visibility
           );
           const mappedProducts = products.map((p: Product) => ({
             ...p,
@@ -87,7 +88,7 @@ export default function ProductsPage(props: {
 
       fetchProducts();
     }
-  }, [user, search, offset]);
+  }, [user, search, offset, visibility]);
 
   function handlePrevPage(event: React.MouseEvent) {
     event.preventDefault();
@@ -114,6 +115,9 @@ export default function ProductsPage(props: {
   };
 
   const handleConfirmDelete = async () => {
+    let visible
+    if(visibility=="true") visible = false
+    else  visible = true
     if (productIdToDelete) {
       try {
         const response = await fetch(
@@ -123,12 +127,12 @@ export default function ProductsPage(props: {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ visible: false }),
+            body: JSON.stringify({ visible: visible }),
           }
         );
 
         if (!response.ok) {
-          throw new Error("Failed to update visibility");
+          //throw new Error("Failed to update visibility");
         }
 
         const updatedProduct = await response.json();
@@ -139,8 +143,12 @@ export default function ProductsPage(props: {
               : p
           )
         );
+        setOffset(0);
+        setVisibility(""+visible);
         closeModal();
-        showToast("Product are not visible now!!!", "default");
+        let idea = sessionStorage.getItem("visibility") === "True" ? "not" : ""
+        
+        showToast("Product are " + idea + " visible now!!!", "default");
 
       } catch (error: any) {
         console.error("Error updating product visibility:", error.message);
@@ -211,11 +219,8 @@ export default function ProductsPage(props: {
       <Tabs defaultValue="all">
         <div className="flex items-center">
           <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="active">Active</TabsTrigger>
-            <TabsTrigger value="archived" className="hidden sm:flex">
-              Archived
-            </TabsTrigger>
+            <TabsTrigger value="all" onClick={() => setVisibility("true")}>Active</TabsTrigger>
+            <TabsTrigger value="archived" onClick={() => setVisibility("false")} >Archived</TabsTrigger>
           </TabsList>
           <div className="ml-auto flex items-center gap-2">
             <Link href="/profile/newProduct">
@@ -233,6 +238,17 @@ export default function ProductsPage(props: {
         </div>
 
         <TabsContent value="all">
+          <ProductsTable
+            onDelete={handleDeleteRequest}
+            products={products}
+            totalProducts={totalProducts}
+            offset={offset}
+            onPrevPage={handlePrevPage}
+            onNextPage={handleNextPage}
+            onSearch={handleSearch}
+          />
+        </TabsContent>
+        <TabsContent value="archived">
           <ProductsTable
             onDelete={handleDeleteRequest}
             products={products}

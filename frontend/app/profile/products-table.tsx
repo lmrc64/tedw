@@ -57,19 +57,22 @@ export function ProductsTable({
   const productsPerPage = 5;
   const startIndex = offset;
   const endIndex = Math.min(offset + productsPerPage, totalProducts);
-
+  let color = sessionStorage.getItem("visibility") === "True" ? "bg-emerald-100" : "bg-rose-100"
   return (
     <Card>
       <CardHeader>
         <SearchInput onSearch={onSearch}/>
-        <CardTitle>Products</CardTitle>
+        <CardTitle>Products
+          {sessionStorage.getItem("visibility") === "True" ? " That Are Visible" : " That Aren´t Visible"}
+        </CardTitle>
         <CardDescription>
           Manage your products and view their sales performance.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
-          <TableHeader>
+        
+          <TableHeader className={color}>
             <TableRow>
               <TableHead className="hidden w-[100px] sm:table-cell">
                 <span className="sr-only">Image</span>
@@ -86,7 +89,7 @@ export function ProductsTable({
           </TableHeader>
           <TableBody>
             {products.map((product) => (
-              <Product key={product._id} product={product}   onDelete={onDelete}/>
+              <Product key={product._id} product={product} onDelete={onDelete}/>
             ))}         
           </TableBody>
         </Table>

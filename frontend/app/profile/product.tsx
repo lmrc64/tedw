@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { useState } from "react";
+import Link from 'next/link';
 
 interface Product {
   _id: string;
@@ -36,7 +36,6 @@ export function Product({ onDelete, product }: ChildProps) {
 
 
   const handleDelete = () => {
-    console.log(`Deleting product: ${product._id}`);
     onDelete(product._id);
   };
 
@@ -73,13 +72,20 @@ export function Product({ onDelete, product }: ChildProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  href={`profile/editProduct/${product._id}`}
+                  className="w-full block text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                >
+                  Edit
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <button
                   onClick={handleDelete}
-                  className="block text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:outline-none focus:ring-rose-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                  className="block text-white bg-amber-700 hover:bg-amber-800 focus:ring-4 focus:outline-none focus:ring-amber-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                 >
-                  Delete Product
+                  {sessionStorage.getItem("visibility") === "True" ? "Delete Product" : "Restore Product"}
                 </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
