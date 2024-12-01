@@ -1,12 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect  } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 // Crear contextos para el carrito y sus acciones
 const CartContext = createContext();
 const AddToCartContext = createContext();
 const UpdateCartQuantityContext = createContext();
 const IsLoadingContext = createContext();
+const ClearCartContext = createContext();
 
 // Hooks personalizados para usar los contextos
 export function useCartContext() {
@@ -25,17 +26,20 @@ export function useIsLoadingContext() {
   return useContext(IsLoadingContext);
 }
 
+export function useClearCartContext() {
+  return useContext(ClearCartContext);
+}
 
 // Proveedor de contexto del carrito
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState([]); 
-  const [isLoading, setIsLoading] = useState(false); 
+  const [cart, setCart] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Función para añadir un producto al carrito
   function addToCart(newItem) {
     setIsLoading(true);
     const existingItem = cart.find((item) => item._id === newItem._id);
-  
+
     if (existingItem) {
       const updatedCart = cart.map((item) =>
         item._id === newItem._id
@@ -46,25 +50,28 @@ export function CartProvider({ children }) {
     } else {
       setCart([...cart, { ...newItem, quantity: newItem.quantity || 1 }]);
     }
-  
+
     setIsLoading(false);
   }
-  
+
   // Función para actualizar la cantidad de un producto en el carrito
   function updateCartItemQuantity(productId, quantity) {
-    setIsLoading(true); 
+    setIsLoading(true);
     const updatedCart = cart
       .map((item) =>
         item._id === productId
           ? { ...item, quantity: Math.max(0, quantity) }
           : item
       )
-      .filter((item) => item.quantity > 0); 
-  
+      .filter((item) => item.quantity > 0);
+
     setCart(updatedCart);
     setIsLoading(false);
   }
-  
+
+  function clearCart() {
+    setCart([]);
+  }
 
   // Proveer contextos anidados para los hijos
   return (
@@ -72,7 +79,9 @@ export function CartProvider({ children }) {
       <AddToCartContext.Provider value={addToCart}>
         <UpdateCartQuantityContext.Provider value={updateCartItemQuantity}>
           <IsLoadingContext.Provider value={isLoading}>
-            {children}
+            <ClearCartContext.Provider value={clearCart}>
+              {children}
+            </ClearCartContext.Provider>
           </IsLoadingContext.Provider>
         </UpdateCartQuantityContext.Provider>
       </AddToCartContext.Provider>

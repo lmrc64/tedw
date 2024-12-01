@@ -9,7 +9,8 @@ import { useCartContext } from "@/context/Store";
 
 function CartPage() {
   const pageTitle = `Cart | ${process.env.siteTitle}`;
-  const { cart, isLoading } = useCartContext();
+  const cart = useCartContext();
+  const isCartEmpty = cart.length === 0;
 
   return (
     <div className="container mx-auto mb-20 min-h-screen">
@@ -17,8 +18,8 @@ function CartPage() {
       <PageTitle text="Your Cart" />
       <CartTable />
       <div className="max-w-sm mx-auto space-y-4 px-2">
-        <CheckOutButton />
-        <br></br>
+        <CheckOutButton disabled={isCartEmpty} />
+        <br />
         <BackToProductButton />
       </div>
     </div>

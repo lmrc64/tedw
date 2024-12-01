@@ -9,12 +9,16 @@ function CartTable() {
   const cart = useCartContext();
   const updateCart = useUpdateCartQuantityContext();
   const [subtotal, setSubtotal] = useState(0);
+  const [coupon, setCoupon] = useState("");
+
 
   useEffect(() => {
     if (cart && cart.length > 0) {
       setSubtotal(
-        cart.reduce((acc, item) => acc + item.price * item.quantity, 0),
+        cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
       );
+    } else {
+      setSubtotal(0);
     }
   }, [cart]);
 
@@ -50,7 +54,7 @@ function CartTable() {
                     width={64}
                     className="hidden sm:inline-flex"
                   />
-                  <Link href={`/products/${item._id}`}>
+                  <Link href={`/store/products/${item._id}`}>
                     <div className="pt-1 hover:text-palette-dark">
                       {item.productTitle}
                     </div>
@@ -91,16 +95,48 @@ function CartTable() {
             </tr>
           )}
           {subtotal > 0 && (
-            <tr>
-              <td></td>
-              <td className="text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">
-                Subtotal
-              </td>
-              <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
-                <Price currency="$" num={subtotal} />
-              </td>
-              <td></td>
-            </tr>
+             <>
+             {/* Subtotal */}
+             <tr>
+               <td></td>
+               <td className="text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">
+                 Subtotal
+               </td>
+               <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
+                 <Price currency="$" num={subtotal} />
+               </td>
+               <td></td>
+             </tr>
+         
+             {/* Coupon Code */}
+             <tr className="mt-4">
+               <td></td>
+               <td className="text-base text-purple-600 font-semibold uppercase sm:px-6 py-4">
+                 Coupon Code
+               </td>
+               <td className="text-center">
+                 <input
+                   type="text"
+                   id="coupon"
+                   onChange={(e) => setCoupon(e.target.value)}
+                   className="bg-gray-50 border border-purple-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-800 block w-full p-2.5"
+                   placeholder="Enter your coupon code"
+                 />
+               </td>
+             </tr>
+  
+             {/* Total */}
+             <tr className="mt-4">
+               <td></td>
+               <td className="text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">
+                 Total
+               </td>
+               <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
+                 <Price currency="$" num={subtotal} />
+               </td>
+               <td></td>
+             </tr>
+           </>
           )}
         </tbody>
       </table>
