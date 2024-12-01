@@ -5,6 +5,9 @@ const orderController = require('../controllers/orderController');
 // Crear una nueva orden
 router.post('/orders', orderController.createOrder);
 
+//charts
+router.get('/monthlyOrders/:id', orderController.getUserMonthlyOrders)
+
 // Obtener todas las órdenes
 router.get('/orders', orderController.getAllOrders);
 
