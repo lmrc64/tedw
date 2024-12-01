@@ -31,10 +31,16 @@ async function getProducts(userId: string, search: string, offset: number, visib
       `/products/user/${userId}/${visibility}?q=${search}&offset=${offset}&limit=5`
   );
   if (!response.ok) {
+    if (response.status === 404){
+      
+      throw new Error("404: No products found");
+      
+    }
     throw new Error("Error fetching data");
   }
-
+  
   const data = await response.json();
+  console.log(data.products)
   return {
     products: data.products,
     newOffset: data.newOffset,
@@ -61,9 +67,10 @@ export default function ProductsPage(props: {
   const user = sessionStorage.getItem("id");
   
   useEffect(() => {
-    if(visibility=="true") sessionStorage.setItem("visibility", "True")
+    if (visibility==="true") sessionStorage.setItem("visibility", "True")
     else  sessionStorage.setItem("visibility", "False")
     if (user) {
+      console.log(visibility)
       const fetchProducts = async () => {
         try {
           const { products, newOffset, totalProducts } = await getProducts(
@@ -80,7 +87,14 @@ export default function ProductsPage(props: {
           setNewOffset(newOffset);
           setTotalProducts(totalProducts);
         } catch (error: any) {
-          //setError(error.message);
+          // console.log(error.message)
+          if (error.message.includes("404")) {
+            setProducts([]);
+            setNewOffset(0);
+            setTotalProducts(0);
+          } else {
+            console.error(error.message);
+          }
         } finally {
           setLoading(false);
         }
