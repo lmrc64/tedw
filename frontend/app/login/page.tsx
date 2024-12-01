@@ -87,9 +87,9 @@ export default function LoginPage() {
           </CardHeader>
 
           <CardFooter className="text-lg flex justify-center">
-            <div>
+            <div className="max-w-2xl w-96">
               <section className="bg-gray-50 font-primary font-extrabold">
-                <div className="flex flex-col px-6 py-8 mx-auto lg:py-0">
+                <div className="flex flex-col px-2 py-4 mx-auto lg:py-0">
                   <div className="w-full bg-white rounded-lg shadow  md:mt-0 sm:max-w-md xl:p-0 ">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                       <form
@@ -109,7 +109,7 @@ export default function LoginPage() {
                             id="email"
                             value={formData.email}
                             onChange={handleChange}
-                            className="bg-gray-50 border border-purple-500 text-purple-500 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 "
+                            className="bg-gray-50 border border-purple-500 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 "
                             placeholder="name@company.com"
                             required={true}
                           />
@@ -128,7 +128,7 @@ export default function LoginPage() {
                             value={formData.password}
                             onChange={handleChange}
                             placeholder="••••••••"
-                            className="bg-gray-50 border border-purple-500 text-purple-500 rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 "
+                            className="bg-gray-50 border border-purple-500 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5 "
                             required={true}
                           />
                         </div>
