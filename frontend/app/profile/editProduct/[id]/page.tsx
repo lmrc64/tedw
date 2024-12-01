@@ -11,7 +11,18 @@ import ProductForm from "./ProductForm";
 import { showToast } from "@/components/interfaces/ToastNotification";
 import { ToastContainer } from "react-toastify";
 
-export default function CustomersPage() {
+
+async function getProduct(productId: string) {
+  const response = await fetch(`http://localhost:3008/api/v1/products/${productId}`);
+  if (!response.ok) {
+    throw new Error("Error fetching data");
+  }
+
+  const data = await response.json();
+  return data; // Retorna el producto directamente
+}
+
+export default function CustomersPage(props: { productId: string }) {
   interface FormData {
     name: string;
     description: string;
@@ -25,6 +36,9 @@ export default function CustomersPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [product, setProduct] = useState<any>(null);
+  const user = sessionStorage.getItem("id");
 
   const validateForm = (Data: FormData) => {
     const { name, description, image, price, stock, status, category } = Data;
@@ -76,6 +90,25 @@ export default function CustomersPage() {
   };
 
 
+  useEffect(() => {
+    if (productId) {
+      const fetchProduct = async () => {
+        try {
+          const productData = await getProduct(productId);
+          setProduct(productData);
+        } catch (error: any) {
+          setError(error.message); // Puedes manejar el error aquí si lo deseas.
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchProduct();
+    }
+  }, [productId]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <Card>
