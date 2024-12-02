@@ -89,7 +89,7 @@ function CheckOutButton({ disabled }) {
       })),
       coupons: coupon || null,
       subtotal: subtotal,
-      total: subtotal,
+      total: total,
       address: shippingAddressString,
       paymentMethod: paymentMethod,
       delivery_date: new Date().toISOString(),

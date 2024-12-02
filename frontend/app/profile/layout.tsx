@@ -89,19 +89,19 @@ function DesktopNav() {
           <Users2 className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="Charts">
+        <NavItem href="/profile/charts/routes" label="Charts">
           <LineChart className="h-5 w-5" />
         </NavItem>
         {/* Mostrar opciones adicionales si es administrador */}
         {isAdmin && (
           <>
-            <NavItem href="Ruta Admin (Mane)" label="site Charts">
+            <NavItem href="/profile/charts/admin/routes" label="site Charts">
               <FileChartColumnIncreasing className="h-5 w-5" />
             </NavItem>
-            <NavItem href="profile/admin/vouchers" label="Vouche">
+            <NavItem href="/profile/admin/vouchers" label="Vouche">
               <Ticket  className="h-5 w-5" />
             </NavItem>
-            <NavItem href="profile/admin/categories" label="Categories">
+            <NavItem href="/profile/admin/categories" label="Categories">
               <FilePlus  className="h-5 w-5" />
             </NavItem>
           </>

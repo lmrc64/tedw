@@ -11,9 +11,9 @@ export default function Page() {
             try {
                 // Hacer las peticiones a los tres endpoints
                 const [ordersResponse, usersResponse, productsResponse] = await Promise.all([
-                    fetch("http://localhost:3008/api/v1/currentYearOrders"),
-                    fetch("http://localhost:3008/api/v1/chart/currentYearUsers"),
-                    fetch("http://localhost:3008/api/v1/currentYearProducts"),
+                    fetch(process.env.API_ROUTE+"/currentYearOrders"),
+                    fetch(process.env.API_ROUTE+"/chart/currentYearUsers"),
+                    fetch(process.env.API_ROUTE+"/currentYearProducts"),
                 ]);
 
                 // Verificar si todas las respuestas son exitosas
@@ -51,8 +51,7 @@ export default function Page() {
     }, []); // El arreglo vacío asegura que este efecto se ejecute una sola vez
 
     return (
-        <div style={{ padding: "20px" }}>
-            <h1>Gráficos con Chart.js</h1>
+        <div style={{ padding: "20px", width: "1920px", height: "800px" }}>
             <BarChart title={"General Statistics For Current Year"} labels={labels} values={values} />
         </div>
     );
