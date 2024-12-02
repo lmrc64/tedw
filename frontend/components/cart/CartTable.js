@@ -5,25 +5,81 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import Price from "@/components/Price";
 
+
+async function getCoupon(coupunId) {
+  
+  const response = await fetch(
+    process.env.API_ROUTE +'/coupons/code/'+coupunId);
+  if (!response.ok) {
+    if (response.status === 404){
+      throw new Error("404: No products found");  
+    }
+    throw new Error("Error fetching data");
+  }
+  
+  const data = await response.json();
+  // console.log(data['coupon'].discount)
+  return {
+    discount: data['coupon'].discount
+  };
+}
+
+var lastSubtotal;
+var total;
+
 function CartTable() {
   const cart = useCartContext();
   const updateCart = useUpdateCartQuantityContext();
   const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
   const [coupon, setCoupon] = useState("");
 
+  // setSubtotal(
+  //   cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  // );
 
   useEffect(() => {
+    // console.log(coupon.discount)
     if (cart && cart.length > 0) {
-      setSubtotal(
-        cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
-      );
+      if(coupon != ""){
+        // lastSubtotal = subtotal;
+        setSubtotal(
+          cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+        );
+        // lastSubtotal = subtotal
+        setTotal(
+          cart.reduce((acc, item) => (acc + item.price * item.quantity) * ((100 - coupon.discount) / 100), 0)
+        );
+        // total = subtotal
+      }
+      else{
+        setSubtotal(
+          cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+        );
+        setTotal(
+          cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+        );
+         
+        // console.log(subtotal + "askdinhino")
+      }
+      
     } else {
       setSubtotal(0);
     }
-  }, [cart]);
+    // total = subtotal
+  }, [cart, coupon]);
 
   function handleUpdateItem(productId, quantity) {
     updateCart(productId, quantity);
+  }
+
+  async function handleUpdatePriceSubtotal(code){
+    try {
+      setCoupon(await getCoupon(code))
+    } catch (error) {
+      setCoupon("")
+    }
+    
   }
 
   return (
@@ -94,7 +150,25 @@ function CartTable() {
               </td>
             </tr>
           )}
-          {subtotal > 0 && (
+
+          { (subtotal > 0 && coupon != "" )&& (
+             <>
+             <tr>
+               <td></td>
+               <td className="text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">
+                 Subtotal
+               </td>
+               <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
+                 <Price currency="$" num={subtotal} />
+               </td>
+               <td >
+                
+               </td>
+             </tr>
+             </>
+            )}
+
+          { (subtotal > 0 && coupon == "") && (
              <>
              {/* Subtotal */}
              <tr>
@@ -107,8 +181,12 @@ function CartTable() {
                </td>
                <td></td>
              </tr>
-         
-             {/* Coupon Code */}
+             </>
+            )}
+
+            {subtotal > 0 && (
+              <>
+                {/* Coupon Code */}
              <tr className="mt-4">
                <td></td>
                <td className="text-base text-purple-600 font-semibold uppercase sm:px-6 py-4">
@@ -118,26 +196,36 @@ function CartTable() {
                  <input
                    type="text"
                    id="coupon"
-                   onChange={(e) => setCoupon(e.target.value)}
+                   onKeyDown={(e) => {
+                    if (e.key === "Enter") handleUpdatePriceSubtotal(e.target.value);
+                  }}
                    className="bg-gray-50 border border-purple-300 text-purple-500 text-sm rounded-lg focus:ring-purple-600 focus:border-purple-800 block w-full p-2.5"
                    placeholder="Enter your coupon code"
                  />
                </td>
              </tr>
-  
-             {/* Total */}
-             <tr className="mt-4">
+              </>
+            )}
+
+            
+         
+            {total > 0 && (
+              <>
+              {/* Total */}
+              <tr className="mt-4">
                <td></td>
                <td className="text-base text-gray-600 font-semibold uppercase px-4 sm:px-6 py-4">
                  Total
                </td>
                <td className="font-primary text-lg text-palette-primary font-medium px-4 sm:px-6 py-4">
-                 <Price currency="$" num={subtotal} />
+                 <Price currency="$" num={total} />
+                 {/* ${total} */}
                </td>
                <td></td>
-             </tr>
-           </>
-          )}
+              </tr>
+              </>
+            )}
+          
         </tbody>
       </table>
     </div>
