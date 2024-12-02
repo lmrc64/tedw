@@ -14,7 +14,7 @@ export default function ProductListings({ category, searchQuery }) {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        let url = process.env.API_ROUTE +"/products";
+        let url = process.env.API_ROUTE +"/products/visibility/all";
         if (category) {
           url += `Category?category=${category}`;
         }

@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["fakestoreapi.com", "cdn.pixabay.com", "example.com", "optimamayoreo.com.mx", "http2.mlstatic.com", "21030021tedw.s3.amazonaws.com"],
+    domains: ["api.dicebear.com","fakestoreapi.com", "cdn.pixabay.com", "example.com", "optimamayoreo.com.mx", "http2.mlstatic.com", "21030021tedw.s3.amazonaws.com"],
   },
   env: {
     API_ROUTE:"http://localhost:3008/api/v1",

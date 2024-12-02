@@ -11,6 +11,8 @@ import {
 import Link from "next/link";
 export function User() {
   let gender = sessionStorage.getItem("gender");
+  let name = sessionStorage.getItem("name");
+
   let id = sessionStorage.getItem("id");
 
   const handleSignOut = () => {
@@ -25,6 +27,13 @@ export function User() {
           size="icon"
           className="overflow-hidden rounded-full"
         >
+          {/*
+          src={
+            name
+              ? "https://api.dicebear.com/9.x/avataaars/svg?seed=" + name.replace(/ /g, "-")
+              : "/profile/profile.png"
+          }
+          */}
           <Image
             src={
               gender ? "/profile/" + gender + ".png" : "/profile/profile.png"
