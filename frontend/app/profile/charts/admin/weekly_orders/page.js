@@ -9,7 +9,7 @@ export default function Page() {
     useEffect(() => {
         const fetchWeeklyOrders = async () => {
             try {
-                const response = await fetch("http://localhost:3008/api/v1/weeklyOrders");
+                const response = await fetch(process.env.API_ROUTE+"/weeklyOrders");
                 if (!response.ok) {
                     throw new Error("Failed to fetch data from API");
                 }
@@ -31,9 +31,8 @@ export default function Page() {
     }, []); // El arreglo vacío asegura que este efecto se ejecute una sola vez
 
     return (
-        <div style={{ padding: "20px" }}>
-            <h1>Gráficos con Chart.js</h1>
-            <BarChart title={"Total of Orders Per Week"} labels={labels} values={values} />
+        <div style={{padding: "20px", width: "1920px", height: "800px"}}>
+            <BarChart title={"Total of Orders Per Week"} labels={labels} values={values}/>
         </div>
     );
 }

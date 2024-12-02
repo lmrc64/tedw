@@ -9,8 +9,8 @@ export default function Page() {
     useEffect(() => {
         const fetchMonthlySales = async () => {
             try {
-                //change for sessionStorage
-                const response = await fetch("http://localhost:3008/api/v1/monthlySales/674bbb0c3b1611e6be82ba43");
+                //change for sessionStorage 674bbb0c3b1611e6be82ba43
+                const response = await fetch(process.env.API_ROUTE+"/monthlySales/"+sessionStorage.getItem('id'));
                 if (!response.ok) {
                     throw new Error("Failed to fetch data from API");
                 }
@@ -32,9 +32,8 @@ export default function Page() {
     }, []); // El arreglo vacío asegura que este efecto se ejecute una sola vez
 
     return (
-        <div style={{ padding: "20px" }}>
-            <h1>Gráficos con Chart.js</h1>
-            <BarChart title={"Sales Per Month"} labels={labels} values={values} />
+        <div style={{padding: "20px", width: "1920px", height: "800px"}}>
+            <BarChart title={"Sales Per Month"} labels={labels} values={values}/>
         </div>
     );
 }
