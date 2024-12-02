@@ -3,13 +3,14 @@ const Coupon = require('../models/Coupon');
 // Crear un nuevo cupón
 const createCoupon = async (req, res) => {
   try {
-    const { codigo, discount, expiration_date, maximum_use } = req.body;
+    const { codigo, discount, expiration_date, maximum_use, status } = req.body;
 
     const newCoupon = new Coupon({
       codigo,
       discount,
       expiration_date,
       maximum_use,
+      status
     });
 
     await newCoupon.save(); 

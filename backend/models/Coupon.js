@@ -5,7 +5,7 @@ const couponSchema = new mongoose.Schema({
     discount: { type: Number, required: true },
     expiration_date: { type: Date },
     maximum_use: { type: Number },
-    status: { type: String, enum: ['Active', 'Expired'], default: 'Active' },
+    status: { type: String, enum: ['Active', 'Expired']},
   },{timestamps: true});
   
   module.exports = mongoose.model('Coupon', couponSchema);
