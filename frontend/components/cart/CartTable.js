@@ -20,12 +20,13 @@ async function getCoupon(coupunId) {
   const data = await response.json();
   // console.log(data['coupon'].discount)
   return {
-    discount: data['coupon'].discount
+    discount: data['coupon'].discount,
+    codigo: data['coupon'].codigo
   };
 }
 
 var lastSubtotal;
-var total;
+var total2;
 
 function CartTable() {
   const cart = useCartContext();
@@ -40,26 +41,32 @@ function CartTable() {
 
   useEffect(() => {
     // console.log(coupon.discount)
+    
     if (cart && cart.length > 0) {
       if(coupon != ""){
-        // lastSubtotal = subtotal;
+        // console.log(coupon.discount + " ansdkjnb")
+        sessionStorage.setItem("discount", coupon.discount)
+        sessionStorage.setItem("codigoC", coupon.codigo)
         setSubtotal(
           cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
         );
-        // lastSubtotal = subtotal
+        lastSubtotal = subtotal
         setTotal(
-          cart.reduce((acc, item) => (acc + item.price * item.quantity) * ((100 - coupon.discount) / 100), 0)
+          lastSubtotal - (lastSubtotal * (coupon.discount / 100))
         );
-        // total = subtotal
+        total2 = total
       }
       else{
+        sessionStorage.setItem("discount", "")
+        sessionStorage.setItem("codigoC", "")
         setSubtotal(
           cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
         );
         setTotal(
           cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
         );
-         
+        total2 = total
+        // sessionStorage.setItem("totalProducts", total2)
         // console.log(subtotal + "askdinhino")
       }
       
@@ -76,6 +83,7 @@ function CartTable() {
   async function handleUpdatePriceSubtotal(code){
     try {
       setCoupon(await getCoupon(code))
+      
     } catch (error) {
       setCoupon("")
     }
@@ -209,7 +217,7 @@ function CartTable() {
 
             
          
-            {total > 0 && (
+            {subtotal > 0 && (
               <>
               {/* Total */}
               <tr className="mt-4">

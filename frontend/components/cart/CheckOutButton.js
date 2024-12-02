@@ -31,6 +31,7 @@ function CheckOutButton({ disabled }) {
   });
   const [isBillingSameAsShipping, setIsBillingSameAsShipping] = useState(false);
   const [subtotal, setSubtotal] = useState(0);
+  const [total, setTotal] = useState(0);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const [coupon, setCoupon] = useState("");
@@ -41,17 +42,71 @@ function CheckOutButton({ disabled }) {
     setPaymentMethod(method);
   };
 
+  var lastSubtotal
+  var couponSS = ""
+  var couponN = ""
+
   //Calcular Subtotal
   useEffect(() => {
-    if (cart && cart.length > 0) {
-      setSubtotal(
-        cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
-      );
+    
+     console.log(couponSS)
+     if (cart && cart.length > 0) {
+      if(couponSS != ""){
+         console.log(couponSS + " oansdjbajk")
+        setSubtotal(
+          cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+        );
+        lastSubtotal = subtotal
+        setTotal(
+          cart.reduce((acc, item) => (acc + item.price * item.quantity) - (acc + item.price * item.quantity * (couponSS / 100)), 0)
+        );
+        // total2 = total
+        // sessionStorage.setItem("totalProducts", total2)
+      }
+      else{
+        setSubtotal(
+          cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+        );
+        setTotal(
+          cart.reduce((acc, item) => acc + item.price * item.quantity, 0)
+        );
+        // total2 = total
+        // sessionStorage.setItem("totalProducts", total2)
+        // console.log(subtotal + "askdinhino")
+      }
+      
     } else {
       setSubtotal(0);
     }
+    // total = subtotal
   }, [cart]);
 
+
+  var totalN, subtotalN
+  function calcTotales(){
+    // console.log(couponSS)
+    couponSS = sessionStorage.getItem("discount")
+    // couponN = sessionStorage.getItem("codigoC")
+     if (cart && cart.length > 0) {
+      if(couponSS != ""){
+        //  console.log(couponSS + " oansdjbajk")
+        subtotalN = subtotal
+        totalN = subtotalN - (subtotalN * (couponSS / 100))
+
+      }
+      else{
+        subtotalN = subtotal
+        totalN = subtotalN - (subtotalN * (couponSS / 100))
+      }
+      
+    } else {
+      setSubtotal(0);
+    }
+    // total = subtotal
+  }
+
+  
+  
   //Validación
   const validateFields = () => {
     if (!shippingAddress.street || !shippingAddress.city || !shippingAddress.state || !shippingAddress.zipCode) {
@@ -77,6 +132,11 @@ function CheckOutButton({ disabled }) {
     e.preventDefault();
     const shippingAddressString = `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.zipCode}`;
     const validationError = validateFields();
+    // const total = sessionStorage.getItem("totalProducts");
+    // console.log(total)
+    // couponSS = sessionStorage.getItem("discount")
+    // couponN = sessionStorage.getItem("codigoC")
+    calcTotales()
     if (validationError) {
       showToast(validationError, "warn");
       return; 
@@ -87,9 +147,9 @@ function CheckOutButton({ disabled }) {
         product: item._id,
         quantity: item.quantity,
       })),
-      coupons: coupon || null,
-      subtotal: subtotal,
-      total: total,
+      coupons: null,
+      subtotal: subtotalN,
+      total: totalN,
       address: shippingAddressString,
       paymentMethod: paymentMethod,
       delivery_date: new Date().toISOString(),
@@ -102,7 +162,7 @@ function CheckOutButton({ disabled }) {
       orderDetails.billemail = billingAddress.mail;
       orderDetails.billcompany = billingAddress.company;
     }
-    //console.log(orderDetails);
+    // console.log(orderDetails);
     createOrder(orderDetails);
     closeModal();
   };
