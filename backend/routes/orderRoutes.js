@@ -23,6 +23,8 @@ router.get('/orders', orderController.getAllOrders);
 
 // Obtener una orden por ID
 router.get('/orders/:id', orderController.getOrderById);
+router.get('/orders/user/:userId', orderController.getOrdersByUser);
+
 
 // Actualizar una orden por ID
 router.put('/orders/:id', orderController.updateOrder);

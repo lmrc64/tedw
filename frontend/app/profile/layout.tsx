@@ -77,11 +77,11 @@ function DesktopNav() {
           <Store className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="My Orders">
+        <NavItem href="/profile/myOrders" label="My Orders">
           <ShoppingCart className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="#" label="My Products">
+        <NavItem href="/profile" label="My Products">
           <Package className="h-5 w-5" />
         </NavItem>
 
@@ -145,7 +145,7 @@ function MobileNav() {
             My Orders
           </Link>
           <Link
-            href="#"
+            href="/profile"
             className="flex items-center gap-4 px-2.5 text-foreground"
           >
             <Package className="h-5 w-5" />

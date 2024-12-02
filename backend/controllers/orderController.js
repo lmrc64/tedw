@@ -96,6 +96,25 @@ const getOrderById = async (req, res) => {
       .json({ message: "Error fetching order", error: err.message });
   }
 };
+// Obtener una orden por ID de usuario
+const getOrdersByUser = async (req, res) => {
+  try {
+    const userId = req.params.userId; 
+
+    const orders = await Order.find({ user: userId })
+      .populate("user")
+      .populate("products.product")
+      .populate("coupons");
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ message: "No orders found for this user" });
+    }
+
+    res.status(200).json({ orders });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching orders", error: err.message });
+  }
+};
 
 // Actualizar una orden por ID
 const updateOrder = async (req, res) => {
@@ -498,5 +517,8 @@ module.exports = {
   getYearlyOrders,
 
   getCurrentYearOrders,
-  getCurrentYearProducts
+  getCurrentYearProducts,
+
+
+  getOrdersByUser,
 };
