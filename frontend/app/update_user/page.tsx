@@ -6,6 +6,8 @@ import Nav from "./Nav";
 import UpdateUserForm from "./UpdateUserForm";
 import { showToast } from "@/components/interfaces/ToastNotification";
 import { ToastContainer } from "react-toastify";
+import { useRouter } from 'next/router';
+
 
 export default function LoginPage() {
   interface FormData {
@@ -99,7 +101,7 @@ export default function LoginPage() {
     }
     try {
       const response = await fetch(process.env.API_ROUTE + "/user/update", {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedData),
       });
@@ -117,6 +119,7 @@ export default function LoginPage() {
   };
 
   return (
+
       <div>
         <ToastContainer pauseOnFocusLoss={false} />
         <Nav />
@@ -129,7 +132,7 @@ export default function LoginPage() {
             </CardHeader>
             <CardFooter>
               <UpdateUserForm
-                  onSubmit={handleSubmit}
+                  onSubmit={handleSubmit}//temporal for dev
                   error={error}
                   success={success}
                   initialData={formData} // Pass initial data here

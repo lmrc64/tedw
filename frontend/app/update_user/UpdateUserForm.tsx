@@ -2,6 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 import CountrySelect from "@/components/interfaces/countryList";
+import Link from "next/link";
 
 type SignUpFormProps = {
   onSubmit: (formData: any) => void;
@@ -150,12 +151,12 @@ export default function UpdateUserForm({
             </label>
           </div>
 
-          <button
-              type="submit"
-              className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          <Link
+              href="/profile"
+              className="w-full text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-block"
           >
             Update Profile
-          </button>
+          </Link>
 
           {error && <p className="text-red-500">{error}</p>}
           {success && <p className="text-green-500">{success}</p>}
