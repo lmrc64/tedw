@@ -90,7 +90,7 @@ const login = async (req, res) => {
       const name = user.firstname + " " + user.lastname
   
       //res.status(200).send({ user: user.email});
-      res.status(200).send({ user: user.email, token: token, name:name , gender: user.gender, id: user._id});
+      res.status(200).send({ user: user.email, token: token, name:name , gender: user.gender, id: user._id, admin: user.admin});
 
     } catch (err) {
       res.status(500).send('Internal server error');

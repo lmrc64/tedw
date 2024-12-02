@@ -54,6 +54,7 @@ export default function LoginPage() {
       sessionStorage.setItem("name", data.name);
       sessionStorage.setItem("gender", data.gender);
       sessionStorage.setItem("id", data.id);
+      sessionStorage.setItem("role", data.admin);
       router.push("/store");
     } catch (err: any) {
       setError(err.message || "An unknown error occurred");

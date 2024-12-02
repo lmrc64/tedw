@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link";
 import {
   Home,
@@ -9,34 +10,25 @@ import {
   ShoppingCart,
   Users2,
   Store,
+  FileChartColumnIncreasing, 
+  FilePlus ,
+  Ticket  
 } from "lucide-react";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { showToast } from "@/components/interfaces/ToastNotification";
-import { ToastContainer } from "react-toastify";import { Button } from "@/components/ui/button";
+import { ToastContainer } from "react-toastify";
+import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { VercelLogo } from "@/components/icons";
 import Image from "next/image";
 import Providers from "./providers";
 import { NavItem } from "./nav-item";
+import { useEffect, useState } from 'react';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const userRole = sessionStorage.getItem("admin");
+
   return (
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -55,6 +47,16 @@ export default function DashboardLayout({
 }
 
 function DesktopNav() {
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const userRole = sessionStorage.getItem("role");
+    if (userRole === "true") {
+      setIsAdmin(true);
+    }
+  }, []);
+
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
@@ -90,6 +92,20 @@ function DesktopNav() {
         <NavItem href="#" label="Charts">
           <LineChart className="h-5 w-5" />
         </NavItem>
+        {/* Mostrar opciones adicionales si es administrador */}
+        {isAdmin && (
+          <>
+            <NavItem href="Ruta Admin (Mane)" label="site Charts">
+              <FileChartColumnIncreasing className="h-5 w-5" />
+            </NavItem>
+            <NavItem href="profile/admin/vouchers" label="Vouche">
+              <Ticket  className="h-5 w-5" />
+            </NavItem>
+            <NavItem href="profile/admin/categories" label="Categories">
+              <FilePlus  className="h-5 w-5" />
+            </NavItem>
+          </>
+        )}
       </nav>
     </aside>
   );
@@ -98,7 +114,7 @@ function DesktopNav() {
 function MobileNav() {
   return (
     <Sheet>
-      <ToastContainer pauseOnFocusLoss={false}/>
+      <ToastContainer pauseOnFocusLoss={false} />
       <SheetTrigger asChild>
         <Button size="icon" variant="outline" className="sm:hidden">
           <PanelLeft className="h-5 w-5" />
