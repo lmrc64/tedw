@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Nav from "@/components/navbar/Nav";
 import { useState } from "react";
 
-function PageLayout() {
+export default function PageLayout({ children }) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const router = useRouter();
 
@@ -15,7 +15,7 @@ function PageLayout() {
     if (!userAuthenticated) {
       router.push("/store");
     }
-  }, []); // El array de dependencias está vacío, ya que `router` no necesita ser dependencias
+  }, [router]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
@@ -28,4 +28,3 @@ function PageLayout() {
     </div>
   );
 }
-export default PageLayout;

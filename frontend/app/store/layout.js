@@ -1,4 +1,3 @@
-// app/store/layout.tsx
 "use client";
 
 import React, { useState, createContext } from "react";
@@ -6,8 +5,9 @@ import Nav from "@/components/navbar/Nav";
 import Footer from "@/components/footer/Footer";
 
 // Crear contexto
+export const CategoryContext = createContext();
 
-export default function Layout({ children }) {
+export default function PageLayout({ children }) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -17,8 +17,8 @@ export default function Layout({ children }) {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-  };
 
+  };
   console.log("searchQuery en Layout:", searchQuery);
   console.log("selectedCategory en Layout:", selectedCategory);
 
